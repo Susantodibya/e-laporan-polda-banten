@@ -898,7 +898,14 @@ Wassalamu'alaikum Wr. Wb.
             const year = today.getFullYear();
             const month = String(today.getMonth() + 1).padStart(2, '0');
             const day = String(today.getDate()).padStart(2, '0');
-            document.getElementById('tanggal').value = `${year}-${month}-${day}`;
+            
+            // Perbaikan: Tambahkan pemeriksaan null sebelum mengatur nilai
+            const tanggalInput = document.getElementById('tanggal');
+            if (tanggalInput) {
+                tanggalInput.value = `${year}-${month}-${day}`;
+            } else {
+                console.error("Error: Element with ID 'tanggal' not found during resetForm.");
+            }
 
             removeWebWatermark(); // Remove watermark when form is reset
             document.getElementById("reportDisplayArea").innerHTML = ''; // Clear report display area
@@ -948,6 +955,23 @@ Wassalamu'alaikum Wr. Wb.
             watermark.className = 'pdf-watermark';
             watermark.textContent = 'Bripda MEEP';
             printElement.appendChild(watermark);
+            // Ensure the watermark is styled correctly for PDF
+            const pdfWatermarkStyle = document.createElement('style');
+            pdfWatermarkStyle.textContent = `
+                .pdf-watermark {
+                    position: absolute;
+                    bottom: 20px;
+                    right: 20px;
+                    font-size: 12px;
+                    color: rgba(0, 0, 0, 0.3);
+                    font-weight: bold;
+                    transform: rotate(-15deg);
+                    transform-origin: 100% 100%;
+                    z-index: 9999;
+                }
+            `;
+            printElement.appendChild(pdfWatermarkStyle);
+
 
             html2pdf().from(printElement).set({
                 margin: 0.5,
@@ -1329,23 +1353,31 @@ Perluasan:`;
             const year = today.getFullYear();
             const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
             const day = String(today.getDate()).padStart(2, '0');
-            document.getElementById('tanggal').value = `${year}-${month}-${day}`;
+            
+            // Perbaikan: Tambahkan pemeriksaan null sebelum mengatur nilai
+            const tanggalInput = document.getElementById('tanggal');
+            if (tanggalInput) {
+                tanggalInput.value = `${year}-${month}-${day}`;
+            } else {
+                console.error("Error: Element with ID 'tanggal' not found on page load.");
+            }
 
             addDefaultParticipantInput(); // Add the initial participant input
             populateFilterOptions(); // Populate filters first
             renderHistory(); // Then render history with initial filters
 
             // Register service worker
+            // Pastikan service-worker.js berada di direktori root aplikasi Anda
             if ('serviceWorker' in navigator) {
-                window.addEventListener('load', () => {
-                    navigator.serviceWorker.register('./service-worker.js')
-                        .then(registration => {
-                            console.log('ServiceWorker registration successful with scope: ', registration.scope);
-                        })
-                        .catch(err => {
-                            console.log('ServiceWorker registration failed: ', err);
-                        });
-                });
+                // Perbaikan: Pastikan pendaftaran ini tidak bersarang di listener 'load' lain
+                // Ini akan memastikan service worker terdaftar segera setelah halaman dimuat
+                navigator.serviceWorker.register('./service-worker.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                    })
+                    .catch(err => {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
             }
         });
     </script>

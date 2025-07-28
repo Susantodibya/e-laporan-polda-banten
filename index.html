@@ -140,8 +140,6 @@
             word-wrap: break-word;
             font-size: 1em;
             color: var(--text-dark);
-            position: relative; /* Needed for absolute positioning of watermark */
-            overflow: hidden; /* Hide watermark if it overflows */
         }
 
         #output p, #output ul, #output li {
@@ -390,33 +388,6 @@
             align-self: flex-end; /* Align button to the bottom */
         }
 
-        /* Watermark style for PDF */
-        .pdf-watermark {
-            position: absolute;
-            bottom: 20px; /* Adjust as needed */
-            right: 20px; /* Adjust as needed */
-            font-size: 12px;
-            color: rgba(0, 0, 0, 0.3); /* Light grey and semi-transparent */
-            font-weight: bold;
-            transform: rotate(-15deg); /* Optional: slight rotation */
-            transform-origin: 100% 100%; /* Rotate from bottom right corner */
-            z-index: 9999; /* Ensure it's on top */
-        }
-
-        /* Watermark style for Web Display */
-        .web-watermark {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(-25deg); /* Centered and rotated */
-            font-size: 3em; /* Larger font for visibility */
-            color: rgba(0, 0, 0, 0.08); /* Very light and transparent */
-            font-weight: bold;
-            pointer-events: none; /* Allows text selection/interaction beneath it */
-            white-space: nowrap; /* Prevent text from wrapping */
-            z-index: 1; /* Ensure it's behind content if content is positioned */
-        }
-
 
         /* Responsive adjustments */
         @media (max-width: 768px) {
@@ -465,9 +436,6 @@
             /* Adjust padding for smaller screens for better touch targets */
             input, select, textarea, button {
                 padding: 15px; /* Increased padding for easier tapping */
-            }
-            .web-watermark {
-                font-size: 2em; /* Smaller font for watermark on small screens */
             }
         }
     </style>
@@ -610,9 +578,7 @@
 
     <h3>Hasil Laporan:</h3>
     <div id="output">
-        <!-- Generated report content will be displayed here -->
-        <div id="reportDisplayArea"></div>
-        <!-- Web watermark will be added dynamically here -->
+        <!-- Generated report will be displayed here -->
     </div>
 
     <hr>
@@ -832,8 +798,7 @@ Wassalamu'alaikum Wr. Wb.
             }
 
             const reportContent = formatReportContent(formData);
-            document.getElementById("reportDisplayArea").innerHTML = reportContent.replace(/\n/g, '<br>');
-            addWebWatermark(); // Add watermark to web display
+            document.getElementById("output").innerHTML = reportContent.replace(/\n/g, '<br>');
 
             saveToHistory(reportContent, formData);
             showModal("Laporan berhasil dibuat!", 'alert');
@@ -868,8 +833,7 @@ Wassalamu'alaikum Wr. Wb.
                     hour12: false
                 });
                 localStorage.setItem("laporanSDMList", JSON.stringify(laporanList));
-                document.getElementById("reportDisplayArea").innerHTML = reportContent.replace(/\n/g, '<br>');
-                addWebWatermark(); // Add watermark to web display
+                document.getElementById("output").innerHTML = reportContent.replace(/\n/g, '<br>');
                 showModal("Laporan berhasil diperbarui!", 'alert');
                 renderHistory(); // Re-render history to reflect changes
                 populateFilterOptions(); // Re-populate filters
@@ -899,9 +863,6 @@ Wassalamu'alaikum Wr. Wb.
             const month = String(today.getMonth() + 1).padStart(2, '0');
             const day = String(today.getDate()).padStart(2, '0');
             document.getElementById('tanggal').value = `${year}-${month}-${day}`;
-
-            removeWebWatermark(); // Remove watermark when form is reset
-            document.getElementById("reportDisplayArea").innerHTML = ''; // Clear report display area
         }
 
         // Helper function to add the default participant input
@@ -933,23 +894,12 @@ Wassalamu'alaikum Wr. Wb.
 
         // Function to download the report as PDF
         function downloadPDF() {
-            const element = document.getElementById("reportDisplayArea"); // Use reportDisplayArea for PDF content
+            const element = document.getElementById("output");
             if (!element.innerHTML.trim()) {
                 showModal("Tidak ada laporan yang bisa diunduh.", 'alert');
                 return;
             }
-
-            // Create a temporary div to hold the content + watermark
-            const printElement = document.createElement('div');
-            printElement.innerHTML = element.innerHTML; // Copy the report content
-
-            // Add the watermark element for PDF
-            const watermark = document.createElement('div');
-            watermark.className = 'pdf-watermark';
-            watermark.textContent = 'Bripda MEEP';
-            printElement.appendChild(watermark);
-
-            html2pdf().from(printElement).set({
+            html2pdf().from(element).set({
                 margin: 0.5,
                 filename: 'laporan-kegiatan-sdm.pdf',
                 image: { type: 'jpeg', quality: 0.98 },
@@ -960,7 +910,7 @@ Wassalamu'alaikum Wr. Wb.
 
         // Function to copy the report to clipboard
         function copyLaporan() {
-            const outputElement = document.getElementById("reportDisplayArea"); // Use reportDisplayArea for copying
+            const outputElement = document.getElementById("output");
             if (!outputElement.innerHTML.trim()) {
                 showModal("Belum ada laporan untuk disalin.", 'alert');
                 return;
@@ -978,8 +928,7 @@ Wassalamu'alaikum Wr. Wb.
         // Function to clear the displayed report
         function hapusLaporan() {
             showModal("Yakin ingin menghapus laporan yang ditampilkan?", 'confirm', () => {
-                document.getElementById("reportDisplayArea").innerHTML = ""; // Clear report display area
-                removeWebWatermark(); // Remove watermark when report is cleared
+                document.getElementById("output").innerHTML = "";
                 showModal("Laporan berhasil dihapus.", 'alert');
             });
         }
@@ -1087,8 +1036,7 @@ Wassalamu'alaikum Wr. Wb.
             const laporanList = JSON.parse(localStorage.getItem("laporanSDMList") || "[]");
             const item = laporanList.find(l => l.id == id);
             if (item) {
-                document.getElementById("reportDisplayArea").innerHTML = item.content;
-                addWebWatermark(); // Add watermark to web display
+                document.getElementById("output").innerHTML = item.content;
                 showModal("Laporan dari riwayat ditampilkan.", 'alert');
             }
         }
@@ -1108,7 +1056,7 @@ Wassalamu'alaikum Wr. Wb.
             document.getElementById("kepada").value = item.data.kepada || 'Karo SDM Polda Banten';
             document.getElementById("dari").value = item.data.dari || 'Kabagbinkar Ro SDM Polda Banten';
             document.getElementById("tanggal").value = item.data.tanggal || '';
-            document.getElementById("waktu").value = item.data.waktu || ''; /* Corrected to .value directly */
+            document.getElementById("waktu").value = item.data.waktu || '';
             document.getElementById("tempat").value = item.data.tempat || '';
             document.getElementById("pimpinan").value = item.data.pimpinan || '';
             document.getElementById("hasil").value = item.data.hasil || '';
@@ -1183,17 +1131,9 @@ Wassalamu'alaikum Wr. Wb.
             const item = laporanList.find(l => l.id == id);
             if (!item) return;
 
-            // Create a temporary div to hold the content + watermark
-            const printElement = document.createElement('div');
-            printElement.innerHTML = item.content; // Copy the report content
-
-            // Add the watermark element
-            const watermark = document.createElement('div');
-            watermark.className = 'pdf-watermark';
-            watermark.textContent = 'Bripda MEEP';
-            printElement.appendChild(watermark);
-
-            html2pdf().from(printElement).set({
+            const temp = document.createElement("div");
+            temp.innerHTML = item.content; // Use the HTML content for PDF generation
+            html2pdf().from(temp).set({
                 margin: 0.5,
                 filename: `laporan-kegiatan-sdm-${id}.pdf`,
                 image: { type: 'jpeg', quality: 0.98 },
@@ -1280,30 +1220,6 @@ Perluasan:`;
             }
         }
 
-        // Function to add the web watermark to the display area
-        function addWebWatermark() {
-            const outputDiv = document.getElementById('output');
-            // Remove existing watermark if any
-            let existingWatermark = outputDiv.querySelector('.web-watermark');
-            if (existingWatermark) {
-                existingWatermark.remove();
-            }
-
-            const watermark = document.createElement('div');
-            watermark.className = 'web-watermark';
-            watermark.textContent = 'Bripda MEEP';
-            outputDiv.appendChild(watermark);
-        }
-
-        // Function to remove the web watermark from the display area
-        function removeWebWatermark() {
-            const outputDiv = document.getElementById('output');
-            let existingWatermark = outputDiv.querySelector('.web-watermark');
-            if (existingWatermark) {
-                existingWatermark.remove();
-            }
-        }
-
 
         // Load history and set default date when the page loads
         window.addEventListener("load", () => {
@@ -1320,15 +1236,14 @@ Perluasan:`;
 
             // Register service worker
             if ('serviceWorker' in navigator) {
-                window.addEventListener('load', () => {
-                    navigator.serviceWorker.register('./service-worker.js')
-                        .then(registration => {
-                            console.log('ServiceWorker registration successful with scope: ', registration.scope);
-                        })
-                        .catch(err => {
-                            console.log('ServiceWorker registration failed: ', err);
-                        });
-                });
+                // Moved service worker registration directly here
+                navigator.serviceWorker.register('./service-worker.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                    })
+                    .catch(err => {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
             }
         });
     </script>

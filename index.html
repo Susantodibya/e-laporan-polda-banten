@@ -455,16 +455,41 @@
         }
 
         @media (max-width: 480px) {
+            body {
+                padding: 0; /* Remove body padding to use full screen width */
+            }
+            form, #output, #history-section {
+                padding: 20px 15px; /* Adjust padding: top/bottom 20px, left/right 15px */
+                margin: 0 auto; /* Remove vertical margin, keep horizontal auto for centering if max-width is used */
+                width: 100%; /* Ensure they take full width */
+                border-radius: 0; /* Optional: remove rounded corners for full-width look on mobile */
+                box-shadow: none; /* Optional: remove shadow for cleaner look on mobile */
+            }
+            h2, h3 {
+                font-size: 1.6em; /* Slightly larger headings */
+                margin-bottom: 15px;
+                padding: 0 10px; /* Add horizontal padding to headings if body padding is 0 */
+            }
+            label {
+                font-size: 1em; /* Slightly larger font for labels */
+            }
+            input, select, textarea {
+                padding: 15px; /* Increased padding for easier tapping */
+                font-size: 1.1em; /* Larger font size for input text */
+            }
             button {
                 width: 100%;
                 margin: 5px 0;
+                padding: 15px 25px; /* Ensure buttons are also larger */
+                font-size: 1.05em; /* Slightly larger font for buttons */
+            }
+            .button-group {
+                gap: 8px; /* Slightly reduce gap if needed, but 10px is fine with 100% width buttons */
             }
             .history-item-buttons button {
-                width: 100%;
-            }
-            /* Adjust padding for smaller screens for better touch targets */
-            input, select, textarea, button {
-                padding: 15px; /* Increased padding for easier tapping */
+                width: 100%; /* Ensure history buttons stack */
+                padding: 12px; /* Adjust padding for history buttons */
+                font-size: 0.95em; /* Slightly larger font for history buttons */
             }
             .web-watermark {
                 font-size: 2em; /* Smaller font for watermark on small screens */
@@ -1349,17 +1374,15 @@ Perluasan:`;
         // Load history and set default date when the page loads
         window.addEventListener("load", () => {
             // Set default date to today
-            const today = new Date();
-            const year = today.getFullYear();
-            const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
-            const day = String(today.getDate()).padStart(2, '0');
-            
-            // Perbaikan: Tambahkan pemeriksaan null sebelum mengatur nilai
             const tanggalInput = document.getElementById('tanggal');
-            if (tanggalInput) {
+            if (tanggalInput) { // Add null check
+                const today = new Date();
+                const year = today.getFullYear();
+                const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+                const day = String(today.getDate()).padStart(2, '0');
                 tanggalInput.value = `${year}-${month}-${day}`;
             } else {
-                console.error("Error: Element with ID 'tanggal' not found on page load.");
+                console.error("Elemen dengan ID 'tanggal' tidak ditemukan saat memuat halaman.");
             }
 
             addDefaultParticipantInput(); // Add the initial participant input
@@ -1367,10 +1390,7 @@ Perluasan:`;
             renderHistory(); // Then render history with initial filters
 
             // Register service worker
-            // Pastikan service-worker.js berada di direktori root aplikasi Anda
             if ('serviceWorker' in navigator) {
-                // Perbaikan: Pastikan pendaftaran ini tidak bersarang di listener 'load' lain
-                // Ini akan memastikan service worker terdaftar segera setelah halaman dimuat
                 navigator.serviceWorker.register('./service-worker.js')
                     .then(registration => {
                         console.log('ServiceWorker registration successful with scope: ', registration.scope);

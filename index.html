@@ -14,17 +14,495 @@
     <!-- PWA: Link to manifest.json -->
     <link rel="manifest" href="./manifest.json">
 
-    <!-- Memuat file CSS eksternal -->
-    <link rel="stylesheet" href="style.css">
-    
+    <style>
+        :root {
+            --primary-blue: #4A90E2;
+            --light-blue: #EBF5FF;
+            --dark-blue: #0056b3;
+            --text-dark: #333333;
+            --text-medium: #555555;
+            --bg-light: #F0F2F5; /* A very light blue-gray for the body background */
+            --content-bg: #FFFFFF; /* Keep content areas white for contrast and professionalism */
+            --border-light: #E0E0E0;
+            --shadow-light: rgba(0, 0, 0, 0.08);
+            --shadow-medium: rgba(0, 0, 0, 0.15);
+            --red-danger: #dc3545;
+            --gemini-green: #34A853; /* Google Green for Gemini button */
+            --orange-edit: #ffc107; /* Color for edit button */
+            --dark-orange-edit: #e0a800;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-light); /* Apply the new light blue-gray */
+            padding: 20px;
+            line-height: 1.6;
+            color: var(--text-dark);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        h2, h3 {
+            text-align: center;
+            color: var(--primary-blue);
+            margin-bottom: 25px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        form, #output, #history-section {
+            background-color: var(--content-bg); /* Content areas remain white for clarity */
+            padding: 30px;
+            max-width: 750px;
+            width: 100%;
+            margin: 20px auto;
+            box-shadow: 0 5px 15px var(--shadow-light);
+            border-radius: 12px;
+            border: 1px solid var(--border-light);
+        }
+
+        form {
+            margin-top: 0;
+        }
+
+        label {
+            font-weight: 500;
+            display: block;
+            margin-top: 20px;
+            margin-bottom: 5px;
+            color: var(--text-medium);
+            font-size: 0.95em;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 1em;
+            color: var(--text-dark);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--primary-blue);
+            outline: none;
+            box-shadow: 0 0 0 3px var(--light-blue);
+        }
+
+        textarea {
+            min-height: 140px;
+            resize: vertical;
+        }
+
+        button {
+            padding: 12px 25px;
+            background: linear-gradient(135deg, var(--primary-blue) 0%, #6A9EEB 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 10px 5px;
+            font-size: 1em;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, var(--dark-blue) 0%, var(--primary-blue) 100%);
+            box-shadow: 0 6px 15px var(--shadow-medium);
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .button-group {
+            text-align: center;
+            margin-top: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px; /* Increased gap for better touch spacing */
+        }
+
+        #output {
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-size: 1em;
+            color: var(--text-dark);
+            position: relative; /* Needed for absolute positioning of watermark */
+            overflow: hidden; /* Hide watermark if it overflows */
+        }
+
+        #output p, #output ul, #output li {
+            margin: 0;
+            padding: 0;
+            line-height: inherit;
+        }
+
+        #output .bold-text {
+            font-weight: bold;
+        }
+
+        #history-section {
+            margin-bottom: 40px;
+        }
+
+        .history-item {
+            border: 1px solid var(--border-light);
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            background-color: var(--bg-light); /* History items use the lighter body background */
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .history-item strong {
+            color: var(--primary-blue);
+        }
+
+        .history-item-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .history-item-buttons button {
+            margin: 0;
+            padding: 8px 15px;
+            font-size: 0.9em;
+            box-shadow: none;
+            background: var(--primary-blue);
+        }
+
+        .history-item-buttons button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .history-item-buttons button.delete-btn {
+            background: var(--red-danger);
+        }
+        .history-item-buttons button.delete-btn:hover {
+            background: #c82333;
+        }
+        .history-item-buttons button.edit-btn {
+            background: var(--orange-edit);
+        }
+        .history-item-buttons button.edit-btn:hover {
+            background: var(--dark-orange-edit);
+        }
+
+        /* Styling for the dynamically added participant input and remove button */
+        #daftar-hadir-container {
+            display: flex;
+            flex-direction: column; /* Stack participants vertically */
+            gap: 10px; /* Space between each participant row */
+        }
+
+        #daftar-hadir-container > div {
+            display: flex;
+            align-items: center;
+            gap: 5px; /* Space between input and remove button */
+        }
+
+        #daftar-hadir-container input.hadir {
+            flex-grow: 1; /* Allow input to take available space */
+            margin-bottom: 0; /* Remove default bottom margin */
+        }
+
+        button.delete-participant-btn {
+            margin: 0;
+            padding: 5px 10px;
+            font-size: 0.8em; /* Slightly smaller font for compact button */
+            min-width: 40px; /* Ensure a minimum touch size */
+            height: 40px; /* Make it square for better touch target */
+            border-radius: 50%; /* Make it round */
+            box-shadow: none;
+            background: var(--red-danger);
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex; /* Use flex to center 'X' */
+            justify-content: center;
+            align-items: center;
+            transition: background 0.2s ease;
+        }
+
+        button.delete-participant-btn:hover {
+            background: #c82333;
+            transform: none; /* No transform on hover for this small button */
+            box-shadow: none;
+        }
+
+
+        button.gemini-btn {
+            background: linear-gradient(135deg, var(--gemini-green) 0%, #5CB85C 100%);
+            box-shadow: 0 4px 10px rgba(52, 168, 83, 0.2);
+        }
+        button.gemini-btn:hover {
+            background: linear-gradient(135deg, #288F44 0%, var(--gemini-green) 100%);
+            box-shadow: 0 6px 15px rgba(52, 168, 83, 0.3);
+        }
+        button.gemini-btn:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+
+        hr {
+            border: none;
+            border-top: 1px dashed var(--border-light);
+            margin: 40px auto;
+            width: 80%;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .modal-overlay.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background-color: var(--content-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px var(--shadow-medium);
+            max-width: 450px;
+            width: 90%;
+            text-align: center;
+            transform: translateY(-20px);
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .modal-overlay.visible .modal-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .modal-content h4 {
+            color: var(--primary-blue);
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+            font-weight: 600;
+        }
+
+        .modal-content p {
+            color: var(--text-medium);
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .modal-content .modal-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .modal-content .modal-buttons button {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 0.95em;
+            font-weight: 500;
+            box-shadow: none; /* Remove button shadow for modal buttons */
+            margin: 0; /* Remove button margin for modal buttons */
+        }
+
+        .modal-content .modal-buttons button.confirm-btn {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, #6A9EEB 100%);
+            color: white;
+        }
+        .modal-content .modal-buttons button.confirm-btn:hover {
+            background: linear-gradient(135deg, var(--dark-blue) 0%, var(--primary-blue) 100%);
+        }
+
+        .modal-content .modal-buttons button.cancel-btn {
+            background: #f0f0f0;
+            color: var(--text-dark);
+            border: 1px solid var(--border-light);
+        }
+        .modal-content .modal-buttons button.cancel-btn:hover {
+            background: #e0e0e0;
+        }
+
+        /* Filter section styling */
+        .filter-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+            align-items: flex-end; /* Align items to the bottom */
+        }
+
+        .filter-section .filter-group {
+            flex: 1; /* Allow groups to grow */
+            min-width: 180px; /* Minimum width for filter groups */
+        }
+
+        .filter-section label {
+            margin-top: 0; /* Adjust label margin for filter section */
+            margin-bottom: 5px;
+            font-size: 0.9em;
+        }
+
+        .filter-section input,
+        .filter-section select {
+            margin-bottom: 0; /* Remove bottom margin for filter inputs/selects */
+        }
+
+        .filter-section button {
+            margin: 0; /* Remove button margin */
+            padding: 10px 20px;
+            font-size: 0.9em;
+            align-self: flex-end; /* Align button to the bottom */
+        }
+
+        /* Watermark style for PDF */
+        .pdf-watermark {
+            position: absolute;
+            bottom: 20px; /* Adjust as needed */
+            right: 20px; /* Adjust as needed */
+            font-size: 12px;
+            color: rgba(0, 0, 0, 0.3); /* Light grey and semi-transparent */
+            font-weight: bold;
+            transform: rotate(-15deg); /* Optional: slight rotation */
+            transform-origin: 100% 100%; /* Rotate from bottom right corner */
+            z-index: 9999; /* Ensure it's on top */
+        }
+
+        /* Watermark style for Web Display */
+        .web-watermark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-25deg); /* Centered and rotated */
+            font-size: 3em; /* Larger font for visibility */
+            color: rgba(0, 0, 0, 0.08); /* Very light and transparent */
+            font-weight: bold;
+            pointer-events: none; /* Allows text selection/interaction beneath it */
+            white-space: nowrap; /* Prevent text from wrapping */
+            z-index: 1; /* Ensure it's behind content if content is positioned */
+        }
+
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+            form, #output, #history-section {
+                padding: 20px;
+                margin: 15px auto;
+            }
+            h2, h3 {
+                font-size: 1.5em;
+                margin-bottom: 20px;
+            }
+            button {
+                width: calc(50% - 10px);
+                margin: 5px;
+            }
+            .button-group {
+                gap: 5px;
+            }
+            .history-item-buttons button {
+                width: calc(50% - 4px);
+            }
+            .filter-section {
+                flex-direction: column; /* Stack filters vertically on small screens */
+                align-items: stretch; /* Stretch items to full width */
+            }
+            .filter-section .filter-group {
+                min-width: unset; /* Remove min-width */
+                width: 100%; /* Full width */
+            }
+            .filter-section button {
+                width: 100%; /* Full width button */
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 0; /* Remove body padding to use full screen width */
+            }
+            form, #output, #history-section {
+                padding: 20px 15px; /* Adjust padding: top/bottom 20px, left/right 15px */
+                margin: 0 auto; /* Remove vertical margin, keep horizontal auto for centering if max-width is used */
+                width: 100%; /* Ensure they take full width */
+                border-radius: 0; /* Optional: remove rounded corners for full-width look on mobile */
+                box-shadow: none; /* Optional: remove shadow for cleaner look on mobile */
+            }
+            h2, h3 {
+                font-size: 1.6em; /* Slightly larger headings */
+                margin-bottom: 15px;
+                padding: 0 10px; /* Add horizontal padding to headings if body padding is 0 */
+            }
+            label {
+                font-size: 1em; /* Slightly larger font for labels */
+            }
+            input, select, textarea {
+                padding: 15px; /* Increased padding for easier tapping */
+                font-size: 1.1em; /* Larger font size for input text */
+            }
+            button {
+                width: 100%;
+                margin: 5px 0;
+                padding: 15px 25px; /* Ensure buttons are also larger */
+                font-size: 1.05em; /* Slightly larger font for buttons */
+            }
+            .button-group {
+                gap: 8px; /* Slightly reduce gap if needed, but 10px is fine with 100% width buttons */
+            }
+            .history-item-buttons button {
+                width: 100%; /* Ensure history buttons stack */
+                padding: 12px; /* Adjust padding for history buttons */
+                font-size: 0.95em; /* Slightly larger font for history buttons */
+            }
+            .web-watermark {
+                font-size: 2em; /* Smaller font for watermark on small screens */
+            }
+        }
+    </style>
 </head>
 <body>
 
     <h2>e-Laporan Kegiatan SDM Polda Banten</h2>
-    <div id="user-info"></div>
 
     <form id="reportForm">
-        <input type="hidden" id="editingReportId" value="">
+        <input type="hidden" id="editingReportId" value=""> <!-- Hidden field to store the ID of the report being edited -->
 
         <label for="jenis">Jenis Kegiatan:</label>
         <input type="text" id="jenis" placeholder="Contoh: Rapat, Supervisi, Kunjungan" required />
@@ -46,9 +524,11 @@
         </select>
 
         <label for="tanggal">Hari, Tanggal:</label>
+        <!-- Changed input type to 'date' for better validation and date picker UI -->
         <input type="date" id="tanggal" required />
 
         <label for="waktu">Waktu:</label>
+        <!-- Changed input type to 'time' for better validation and time picker UI -->
         <input type="time" id="waktu" required />
 
         <label for="tempat">Tempat:</label>
@@ -155,7 +635,9 @@
 
     <h3>Hasil Laporan:</h3>
     <div id="output">
+        <!-- Generated report content will be displayed here -->
         <div id="reportDisplayArea"></div>
+        <!-- Web watermark will be added dynamically here -->
     </div>
 
     <hr>
@@ -203,110 +685,7 @@
         </div>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, doc, setDoc, deleteDoc, getDocs, onSnapshot, query, where, writeBatch } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        import { setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        
-        // Atur level log Firebase
-        setLogLevel('debug');
-        
-        // Global variables provided by the environment
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-        
-        // Firebase initialization and auth state management
-        let db;
-        let auth;
-        let currentUserId = null;
-        let unsubscribeHistory = null;
-        
-        const app = initializeApp(firebaseConfig);
-        db = getFirestore(app);
-        auth = getAuth(app);
-        
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                currentUserId = user.uid;
-                document.getElementById('user-info').textContent = `User ID: ${currentUserId}`;
-                console.log("Authenticated with user ID:", currentUserId);
-                // Listen to the user's history in real-time
-                if (unsubscribeHistory) {
-                    unsubscribeHistory();
-                }
-                const q = query(collection(db, "artifacts", appId, "users", currentUserId, "laporan"));
-                unsubscribeHistory = onSnapshot(q, (querySnapshot) => {
-                    const history = [];
-                    querySnapshot.forEach((doc) => {
-                        history.push({ id: doc.id, ...doc.data() });
-                    });
-                    renderHistory(history);
-                    populateFilterOptions(history);
-                });
-            } else {
-                currentUserId = null;
-                document.getElementById('user-info').textContent = `Belum terautentikasi.`;
-                console.log("No user is authenticated. Signing in anonymously.");
-                if (initialAuthToken) {
-                    try {
-                        await signInWithCustomToken(auth, initialAuthToken);
-                        console.log("Signed in with custom token.");
-                    } catch (error) {
-                        console.error("Error signing in with custom token:", error);
-                        await signInAnonymously(auth);
-                        console.log("Signed in anonymously as a fallback.");
-                    }
-                } else {
-                    await signInAnonymously(auth);
-                    console.log("Signed in anonymously.");
-                }
-            }
-        });
-        
-        // Drag-and-drop variables
-        let draggedItem = null;
-        
-        // Event listeners for drag and drop
-        const daftarHadirContainer = document.getElementById("daftar-hadir-container");
-        daftarHadirContainer.addEventListener("dragstart", (e) => {
-            draggedItem = e.target;
-            setTimeout(() => {
-                e.target.classList.add("dragging");
-            }, 0);
-        });
-        
-        daftarHadirContainer.addEventListener("dragover", (e) => {
-            e.preventDefault();
-            if (!draggedItem) return;
-            const afterElement = getDragAfterElement(daftarHadirContainer, e.clientY);
-            const currentElement = draggedItem;
-            if (afterElement == null) {
-                daftarHadirContainer.appendChild(currentElement);
-            } else {
-                daftarHadirContainer.insertBefore(currentElement, afterElement);
-            }
-        });
-        
-        daftarHadirContainer.addEventListener("dragend", () => {
-            draggedItem.classList.remove("dragging");
-            draggedItem = null;
-        });
-        
-        function getDragAfterElement(container, y) {
-            const draggableElements = [...container.querySelectorAll('div[draggable="true"]:not(.dragging)')];
-            return draggableElements.reduce((closest, child) => {
-                const box = child.getBoundingClientRect();
-                const offset = y - box.top - box.height / 2;
-                if (offset < 0 && offset > closest.offset) {
-                    return { offset: offset, element: child };
-                } else {
-                    return closest;
-                }
-            }, { offset: Number.NEGATIVE_INFINITY }).element;
-        }
-
+    <script>
         // Global variable to store the confirm callback
         let confirmCallback = null;
 
@@ -359,27 +738,22 @@
         }
 
         // Function to add more participant input fields
-        function tambahPeserta(value = '') {
+        function tambahPeserta() {
             const container = document.getElementById("daftar-hadir-container");
             const newParticipantDiv = document.createElement("div"); // Create a div to hold input and button
             newParticipantDiv.style.display = "flex";
             newParticipantDiv.style.alignItems = "center";
             newParticipantDiv.style.gap = "5px";
-            newParticipantDiv.draggable = true; // Make the whole div draggable
 
             const input = document.createElement("input");
             input.setAttribute("list", "daftar-hadir");
             input.className = "hadir";
             input.placeholder = "Ketik atau pilih peserta";
             input.style.marginBottom = "0"; // Override default margin for stacked inputs
-            if (value) {
-                input.value = value;
-            }
 
             const removeBtn = document.createElement("button");
             removeBtn.textContent = "X";
             removeBtn.className = "delete-participant-btn";
-            removeBtn.type = "button";
             removeBtn.onclick = function() {
                 container.removeChild(newParticipantDiv);
             };
@@ -474,81 +848,9 @@ Wassalamu'alaikum Wr. Wb.
 *Biro SDM Polda Banten*
 *Mewujudkan SDM Polri Yang Unggul*`;
         }
-        
-        // --- Firestore Functions ---
-        async function saveReportToFirestore(reportData) {
-            if (!currentUserId) {
-                console.error("User not authenticated.");
-                showModal("Autentikasi gagal. Silakan coba lagi.", 'alert');
-                return;
-            }
-            try {
-                const reportRef = doc(collection(db, "artifacts", appId, "users", currentUserId, "laporan"));
-                await setDoc(reportRef, reportData);
-            } catch (error) {
-                console.error("Error saving document to Firestore:", error);
-                showModal("Gagal menyimpan laporan. Terjadi kesalahan.", 'alert');
-            }
-        }
-        
-        async function updateReportInFirestore(id, reportData) {
-            if (!currentUserId) {
-                console.error("User not authenticated.");
-                showModal("Autentikasi gagal. Silakan coba lagi.", 'alert');
-                return;
-            }
-            try {
-                const reportRef = doc(db, "artifacts", appId, "users", currentUserId, "laporan", id);
-                await setDoc(reportRef, reportData);
-            } catch (error) {
-                console.error("Error updating document in Firestore:", error);
-                showModal("Gagal memperbarui laporan. Terjadi kesalahan.", 'alert');
-            }
-        }
-        
-        async function deleteReportFromFirestore(id) {
-            if (!currentUserId) {
-                console.error("User not authenticated.");
-                showModal("Autentikasi gagal. Silakan coba lagi.", 'alert');
-                return;
-            }
-            try {
-                const reportRef = doc(db, "artifacts", appId, "users", currentUserId, "laporan", id);
-                await deleteDoc(reportRef);
-                showModal("Laporan berhasil dihapus dari riwayat.", 'alert');
-            } catch (error) {
-                console.error("Error deleting document from Firestore:", error);
-                showModal("Gagal menghapus laporan. Terjadi kesalahan.", 'alert');
-            }
-        }
-        
-        async function clearAllReportsFromFirestore() {
-            if (!currentUserId) {
-                console.error("User not authenticated.");
-                showModal("Autentikasi gagal. Silakan coba lagi.", 'alert');
-                return;
-            }
-            try {
-                const q = query(collection(db, "artifacts", appId, "users", currentUserId, "laporan"));
-                const querySnapshot = await getDocs(q);
-                if (querySnapshot.empty) {
-                     showModal("Tidak ada riwayat untuk dihapus.", 'alert');
-                     return;
-                }
-                const batch = writeBatch(db);
-                querySnapshot.forEach((doc) => {
-                    batch.delete(doc.ref);
-                });
-                await batch.commit();
-                showModal("Semua riwayat laporan telah dihapus.", 'alert');
-            } catch (error) {
-                console.error("Gagal menghapus semua riwayat. Terjadi kesalahan.", 'alert');
-            }
-        }
-
 
         // Function to generate a new report
-        async function generateLaporan() {
+        function generateLaporan() {
             const formData = getFormData();
             if (!validateFormData(formData)) {
                 return;
@@ -556,25 +858,15 @@ Wassalamu'alaikum Wr. Wb.
 
             const reportContent = formatReportContent(formData);
             document.getElementById("reportDisplayArea").innerHTML = reportContent.replace(/\n/g, '<br>');
-            addWebWatermark();
+            addWebWatermark(); // Add watermark to web display
 
-            const reportData = {
-                content: reportContent,
-                data: formData,
-                time: new Date().toLocaleString('id-ID', {
-                    year: 'numeric', month: 'long', day: 'numeric',
-                    hour: '2-digit', minute: '2-digit', second: '2-digit',
-                    hour12: false
-                }),
-                timestamp: Date.now()
-            };
-            await saveReportToFirestore(reportData);
-            showModal("Laporan berhasil dibuat dan disimpan!", 'alert');
-            resetForm();
+            saveToHistory(reportContent, formData);
+            showModal("Laporan berhasil dibuat!", 'alert');
+            resetForm(); // Reset form after creating new report
         }
 
         // Function to update an existing report
-        async function updateLaporan() {
+        function updateLaporan() {
             const editingId = document.getElementById("editingReportId").value;
             if (!editingId) {
                 showModal("Tidak ada laporan yang sedang diedit.", 'alert');
@@ -587,23 +879,29 @@ Wassalamu'alaikum Wr. Wb.
             }
 
             const reportContent = formatReportContent(formData);
-            document.getElementById("reportDisplayArea").innerHTML = reportContent.replace(/\n/g, '<br>');
-            addWebWatermark();
 
-            const reportData = {
-                content: reportContent,
-                data: formData,
-                time: new Date().toLocaleString('id-ID', {
+            let laporanList = JSON.parse(localStorage.getItem("laporanSDMList") || "[]");
+            const index = laporanList.findIndex(l => l.id == editingId);
+
+            if (index !== -1) {
+                laporanList[index].content = reportContent;
+                laporanList[index].data = formData;
+                // Update timestamp for edited report
+                laporanList[index].time = new Date().toLocaleString('id-ID', {
                     year: 'numeric', month: 'long', day: 'numeric',
                     hour: '2-digit', minute: '2-digit', second: '2-digit',
                     hour12: false
-                }),
-                timestamp: Date.now()
-            };
-
-            await updateReportInFirestore(editingId, reportData);
-            showModal("Laporan berhasil diperbarui!", 'alert');
-            resetForm();
+                });
+                localStorage.setItem("laporanSDMList", JSON.stringify(laporanList));
+                document.getElementById("reportDisplayArea").innerHTML = reportContent.replace(/\n/g, '<br>');
+                addWebWatermark(); // Add watermark to web display
+                showModal("Laporan berhasil diperbarui!", 'alert');
+                renderHistory(); // Re-render history to reflect changes
+                populateFilterOptions(); // Re-populate filters
+                resetForm(); // Reset form after update
+            } else {
+                showModal("Laporan tidak ditemukan untuk diperbarui.", 'alert');
+            }
         }
 
         // Function to reset the form and action buttons
@@ -614,15 +912,19 @@ Wassalamu'alaikum Wr. Wb.
             document.getElementById("mainActionButton").onclick = generateLaporan;
             document.getElementById("cancelEditButton").style.display = "none";
 
+            // Clear dynamically added participant inputs
             const container = document.getElementById("daftar-hadir-container");
-            container.innerHTML = '';
+            container.innerHTML = ''; // Clear all existing inputs and buttons
+            // Add back the default participant input
             addDefaultParticipantInput();
 
+            // Set default date to today
             const today = new Date();
             const year = today.getFullYear();
             const month = String(today.getMonth() + 1).padStart(2, '0');
             const day = String(today.getDate()).padStart(2, '0');
             
+            // Perbaikan: Tambahkan pemeriksaan null sebelum mengatur nilai
             const tanggalInput = document.getElementById('tanggal');
             if (tanggalInput) {
                 tanggalInput.value = `${year}-${month}-${day}`;
@@ -630,37 +932,28 @@ Wassalamu'alaikum Wr. Wb.
                 console.error("Error: Element with ID 'tanggal' not found during resetForm.");
             }
 
-            removeWebWatermark();
-            document.getElementById("reportDisplayArea").innerHTML = '';
+            removeWebWatermark(); // Remove watermark when form is reset
+            document.getElementById("reportDisplayArea").innerHTML = ''; // Clear report display area
         }
 
         // Helper function to add the default participant input
         function addDefaultParticipantInput() {
             const container = document.getElementById("daftar-hadir-container");
-            const newParticipantDiv = document.createElement("div");
-            newParticipantDiv.style.display = "flex";
-            newParticipantDiv.style.alignItems = "center";
-            newParticipantDiv.style.gap = "5px";
-            newParticipantDiv.draggable = true;
+            const defaultParticipantDiv = document.createElement("div");
+            defaultParticipantDiv.style.display = "flex";
+            defaultParticipantDiv.style.alignItems = "center";
+            defaultParticipantDiv.style.gap = "5px";
 
-            const input = document.createElement("input");
-            input.setAttribute("list", "daftar-hadir");
-            input.className = "hadir";
-            input.value = "Kasubbagmutjab Bag Binkar Ro SDM Polda Banten";
-            input.style.marginBottom = "0";
+            const defaultInput = document.createElement("input");
+            defaultInput.setAttribute("list", "daftar-hadir");
+            defaultInput.className = "hadir";
+            defaultInput.value = "Kasubbagmutjab Bag Binkar Ro SDM Polda Banten";
+            defaultInput.style.marginBottom = "0"; // Override default margin for stacked inputs
 
-            const removeBtn = document.createElement("button");
-            removeBtn.textContent = "X";
-            removeBtn.className = "delete-participant-btn";
-            removeBtn.type = "button";
-            removeBtn.onclick = function() {
-                container.removeChild(newParticipantDiv);
-            };
-
-            newParticipantDiv.appendChild(input);
-            newParticipantDiv.appendChild(removeBtn);
-            container.appendChild(newParticipantDiv);
+            defaultParticipantDiv.appendChild(defaultInput);
+            container.appendChild(defaultParticipantDiv);
         }
+
 
         // Function to cancel editing and reset form
         function cancelEdit() {
@@ -672,20 +965,22 @@ Wassalamu'alaikum Wr. Wb.
 
         // Function to download the report as PDF
         function downloadPDF() {
-            const element = document.getElementById("reportDisplayArea");
+            const element = document.getElementById("reportDisplayArea"); // Use reportDisplayArea for PDF content
             if (!element.innerHTML.trim()) {
                 showModal("Tidak ada laporan yang bisa diunduh.", 'alert');
                 return;
             }
 
+            // Create a temporary div to hold the content + watermark
             const printElement = document.createElement('div');
-            printElement.innerHTML = element.innerHTML;
+            printElement.innerHTML = element.innerHTML; // Copy the report content
 
+            // Add the watermark element for PDF
             const watermark = document.createElement('div');
             watermark.className = 'pdf-watermark';
             watermark.textContent = 'Bripda MEEP';
             printElement.appendChild(watermark);
-
+            // Ensure the watermark is styled correctly for PDF
             const pdfWatermarkStyle = document.createElement('style');
             pdfWatermarkStyle.textContent = `
                 .pdf-watermark {
@@ -714,12 +1009,13 @@ Wassalamu'alaikum Wr. Wb.
 
         // Function to copy the report to clipboard
         function copyLaporan() {
-            const outputElement = document.getElementById("reportDisplayArea");
+            const outputElement = document.getElementById("reportDisplayArea"); // Use reportDisplayArea for copying
             if (!outputElement.innerHTML.trim()) {
                 showModal("Belum ada laporan untuk disalin.", 'alert');
                 return;
             }
             const tempElement = document.createElement("textarea");
+            // For copying, convert <br> back to \n and then get plain text
             tempElement.value = outputElement.innerHTML.replace(/<br>/g, '\n').replace(/<[^>]+>/g, "");
             document.body.appendChild(tempElement);
             tempElement.select();
@@ -731,37 +1027,64 @@ Wassalamu'alaikum Wr. Wb.
         // Function to clear the displayed report
         function hapusLaporan() {
             showModal("Yakin ingin menghapus laporan yang ditampilkan?", 'confirm', () => {
-                document.getElementById("reportDisplayArea").innerHTML = "";
-                removeWebWatermark();
+                document.getElementById("reportDisplayArea").innerHTML = ""; // Clear report display area
+                removeWebWatermark(); // Remove watermark when report is cleared
                 showModal("Laporan berhasil dihapus.", 'alert');
             });
         }
 
         // --- History Functions ---
 
+        // Function to save a report to local storage history
+        function saveToHistory(laporanHTML, formData) {
+            let laporanList = JSON.parse(localStorage.getItem("laporanSDMList") || "[]");
+            const newEntry = {
+                id: Date.now(), // Unique ID for each report
+                time: new Date().toLocaleString('id-ID', {
+                    year: 'numeric', month: 'long', day: 'numeric',
+                    hour: '2-digit', minute: '2-digit', second: '2-digit',
+                    hour12: false // Use 24-hour format
+                }), // Format date and time for Indonesia
+                content: laporanHTML, // Save the HTML content
+                data: formData // Save the raw form data for filtering
+            };
+            laporanList.unshift(newEntry); // Add to the beginning of the array (newest first)
+            localStorage.setItem("laporanSDMList", JSON.stringify(laporanList));
+            renderHistory(); // Re-render history after saving
+            populateFilterOptions(); // Re-populate filter options after new data is added
+        }
+
         // Function to render the history of reports with search and filter
-        function renderHistory(laporanList) {
+        function renderHistory() {
             const historyContainer = document.getElementById("history");
+            let laporanList = JSON.parse(localStorage.getItem("laporanSDMList") || "[]");
+
             const searchQuery = document.getElementById('searchQuery').value.toLowerCase();
             const filterJenis = document.getElementById('filterJenis').value;
             const filterKepada = document.getElementById('filterKepada').value;
 
+            // Filter the reports
             const filteredList = laporanList.filter(entry => {
-                const data = entry.data || {};
+                const data = entry.data || {}; // Ensure data exists
                 const contentText = entry.content.toLowerCase();
 
+                // Search by keyword
                 const matchesSearch = searchQuery === '' ||
-                                     contentText.includes(searchQuery) ||
-                                     (data.jenis && data.jenis.toLowerCase().includes(searchQuery)) ||
-                                     (data.kepada && data.kepada.toLowerCase().includes(searchQuery)) ||
-                                     (data.pimpinan && data.pimpinan.toLowerCase().includes(searchQuery)) ||
-                                     (data.hasil && data.hasil.toLowerCase().includes(searchQuery));
+                                      contentText.includes(searchQuery) ||
+                                      (data.jenis && data.jenis.toLowerCase().includes(searchQuery)) ||
+                                      (data.kepada && data.kepada.toLowerCase().includes(searchQuery)) ||
+                                      (data.pimpinan && data.pimpinan.toLowerCase().includes(searchQuery)) ||
+                                      (data.hasil && data.hasil.toLowerCase().includes(searchQuery));
 
+                // Filter by Jenis Kegiatan
                 const matchesJenis = filterJenis === '' || (data.jenis && data.jenis === filterJenis);
+
+                // Filter by Kepada Yth
                 const matchesKepada = filterKepada === '' || (data.kepada && data.kepada === filterKepada);
 
                 return matchesSearch && matchesJenis && matchesKepada;
             });
+
 
             if (filteredList.length === 0) {
                 historyContainer.innerHTML = "<p>Tidak ada riwayat laporan yang cocok dengan kriteria pencarian/filter.</p>";
@@ -785,84 +1108,116 @@ Wassalamu'alaikum Wr. Wb.
         }
 
         // Function to populate filter dropdowns with unique values from history
-        function populateFilterOptions(laporanList) {
+        function populateFilterOptions() {
+            const laporanList = JSON.parse(localStorage.getItem("laporanSDMList") || "[]");
             const filterJenisSelect = document.getElementById('filterJenis');
             const filterKepadaSelect = document.getElementById('filterKepada');
 
+            // Collect unique Jenis Kegiatan
             const uniqueJenis = new Set(laporanList.map(entry => entry.data && entry.data.jenis).filter(Boolean));
+            // Store current selected value to re-apply after update
             const currentFilterJenis = filterJenisSelect.value;
             filterJenisSelect.innerHTML = '<option value="">Semua</option>' +
-                                         Array.from(uniqueJenis).map(jenis => `<option value="${jenis}">${jenis}</option>`).join('');
-            filterJenisSelect.value = currentFilterJenis;
+                                          Array.from(uniqueJenis).map(jenis => `<option value="${jenis}">${jenis}</option>`).join('');
+            filterJenisSelect.value = currentFilterJenis; // Re-apply
 
+            // Collect unique Kepada Yth
             const uniqueKepada = new Set(laporanList.map(entry => entry.data && entry.data.kepada).filter(Boolean));
+            // Store current selected value to re-apply after update
             const currentFilterKepada = filterKepadaSelect.value;
             filterKepadaSelect.innerHTML = '<option value="">Semua</option>' +
                                            Array.from(uniqueKepada).map(kepada => `<option value="${kepada}">${kepada}</option>`).join('');
-            filterKepadaSelect.value = currentFilterKepada;
+            filterKepadaSelect.value = currentFilterKepada; // Re-apply
         }
+
 
         // Function to display a specific report from history in the output area
         function showLaporan(id) {
-            const reportRef = doc(db, "artifacts", appId, "users", currentUserId, "laporan", id);
-            onSnapshot(reportRef, (docSnap) => {
-                if (docSnap.exists()) {
-                    const item = docSnap.data();
-                    document.getElementById("reportDisplayArea").innerHTML = item.content;
-                    addWebWatermark();
-                    showModal("Laporan dari riwayat ditampilkan.", 'alert');
-                } else {
-                    showModal("Laporan tidak ditemukan.", 'alert');
-                }
-            });
+            const laporanList = JSON.parse(localStorage.getItem("laporanSDMList") || "[]");
+            const item = laporanList.find(l => l.id == id);
+            if (item) {
+                document.getElementById("reportDisplayArea").innerHTML = item.content;
+                addWebWatermark(); // Add watermark to web display
+                showModal("Laporan dari riwayat ditampilkan.", 'alert');
+            }
         }
 
         // Function to populate the form for editing
-        async function editLaporanById(id) {
-            const reportRef = doc(db, "artifacts", appId, "users", currentUserId, "laporan", id);
-            const docSnap = await getDoc(reportRef);
-            if (!docSnap.exists() || !docSnap.data().data) {
+        function editLaporanById(id) {
+            const laporanList = JSON.parse(localStorage.getItem("laporanSDMList") || "[]");
+            const item = laporanList.find(l => l.id == id);
+
+            if (!item || !item.data) {
                 showModal("Data laporan tidak ditemukan untuk diedit.", 'alert');
                 return;
             }
-            const item = docSnap.data();
-            
+
+            // Populate form fields
             document.getElementById("jenis").value = item.data.jenis || '';
             document.getElementById("kepada").value = item.data.kepada || 'Karo SDM Polda Banten';
             document.getElementById("dari").value = item.data.dari || 'Kabagbinkar Ro SDM Polda Banten';
             document.getElementById("tanggal").value = item.data.tanggal || '';
-            document.getElementById("waktu").value = item.data.waktu || '';
+            document.getElementById("waktu").value = item.data.waktu || ''; /* Corrected to .value directly */
             document.getElementById("tempat").value = item.data.tempat || '';
             document.getElementById("pimpinan").value = item.data.pimpinan || '';
             document.getElementById("hasil").value = item.data.hasil || '';
             document.getElementById("sapaan").value = item.data.sapaan || 'Komandan';
 
+            // Clear existing participants and add from saved data
             const hadirContainer = document.getElementById("daftar-hadir-container");
-            hadirContainer.innerHTML = '';
+            hadirContainer.innerHTML = ''; // Clear all current inputs
 
             if (item.data.peserta && item.data.peserta.length > 0) {
                 item.data.peserta.forEach(peserta => {
-                    tambahPeserta(peserta);
+                    const newParticipantDiv = document.createElement("div");
+                    newParticipantDiv.style.display = "flex";
+                    newParticipantDiv.style.alignItems = "center";
+                    newParticipantDiv.style.gap = "5px";
+
+                    const input = document.createElement("input");
+                    input.setAttribute("list", "daftar-hadir");
+                    input.className = "hadir";
+                    input.value = peserta;
+                    input.style.marginBottom = "0";
+
+                    const removeBtn = document.createElement("button");
+                    removeBtn.textContent = "X";
+                    removeBtn.className = "delete-participant-btn";
+                    removeBtn.onclick = function() {
+                        hadirContainer.removeChild(newParticipantDiv);
+                    };
+                    newParticipantDiv.appendChild(input);
+                    newParticipantDiv.appendChild(removeBtn);
+                    hadirContainer.appendChild(newParticipantDiv);
                 });
             } else {
+                // If no participants saved, add the default one
                 addDefaultParticipantInput();
             }
 
+
+            // Set the editing ID
             document.getElementById("editingReportId").value = id;
+
+            // Change main action button to "Simpan Perubahan"
             document.getElementById("mainActionButton").textContent = "Simpan Perubahan";
             document.getElementById("mainActionButton").onclick = updateLaporan;
+
+            // Show cancel edit button
             document.getElementById("cancelEditButton").style.display = "inline-block";
+
             showModal("Laporan siap untuk diedit. Mohon perbarui formulir.", 'alert');
         }
 
+
         // Function to copy a specific report from history to clipboard
-        async function copyLaporanById(id) {
-            const reportRef = doc(db, "artifacts", appId, "users", currentUserId, "laporan", id);
-            const docSnap = await getDoc(reportRef);
-            if (!docSnap.exists()) return;
-            const item = docSnap.data();
+        function copyLaporanById(id) {
+            const laporanList = JSON.parse(localStorage.getItem("laporanSDMList") || "[]");
+            const item = laporanList.find(l => l.id == id);
+            if (!item) return;
 
             const temp = document.createElement("textarea");
+            // For copying, convert <br> back to \n and then get plain text
             temp.value = item.content.replace(/<br>/g, '\n').replace(/<[^>]+>/g, "");
             document.body.appendChild(temp);
             temp.select();
@@ -872,19 +1227,21 @@ Wassalamu'alaikum Wr. Wb.
         }
 
         // Function to download a specific report from history as PDF
-        async function downloadPDFById(id) {
-            const reportRef = doc(db, "artifacts", appId, "users", currentUserId, "laporan", id);
-            const docSnap = await getDoc(reportRef);
-            if (!docSnap.exists()) return;
-            const item = docSnap.data();
+        function downloadPDFById(id) {
+            const laporanList = JSON.parse(localStorage.getItem("laporanSDMList") || "[]");
+            const item = laporanList.find(l => l.id == id);
+            if (!item) return;
 
+            // Create a temporary div to hold the content + watermark
             const printElement = document.createElement('div');
-            printElement.innerHTML = item.content;
+            printElement.innerHTML = item.content; // Copy the report content
 
+            // Add the watermark element
             const watermark = document.createElement('div');
             watermark.className = 'pdf-watermark';
             watermark.textContent = 'Bripda MEEP';
             printElement.appendChild(watermark);
+            // Ensure the watermark is styled correctly for PDF
             const pdfWatermarkStyle = document.createElement('style');
             pdfWatermarkStyle.textContent = `
                 .pdf-watermark {
@@ -901,6 +1258,7 @@ Wassalamu'alaikum Wr. Wb.
             `;
             printElement.appendChild(pdfWatermarkStyle);
 
+
             html2pdf().from(printElement).set({
                 margin: 0.5,
                 filename: `laporan-kegiatan-sdm-${id}.pdf`,
@@ -912,12 +1270,24 @@ Wassalamu'alaikum Wr. Wb.
 
         // Function to delete a specific report from history
         function deleteLaporanById(id) {
-            showModal("Yakin ingin menghapus laporan ini dari riwayat?", 'confirm', () => deleteReportFromFirestore(id));
+            showModal("Yakin ingin menghapus laporan ini dari riwayat?", 'confirm', () => {
+                let laporanList = JSON.parse(localStorage.getItem("laporanSDMList") || "[]");
+                laporanList = laporanList.filter(l => l.id != id);
+                localStorage.setItem("laporanSDMList", JSON.stringify(laporanList));
+                renderHistory(); // Re-render history after deletion
+                populateFilterOptions(); // Re-populate filter options after deletion
+                showModal("Laporan berhasil dihapus dari riwayat.", 'alert');
+            });
         }
 
         // Function to clear all reports from history
         function clearAllHistory() {
-            showModal("Yakin ingin menghapus semua riwayat laporan? Tindakan ini tidak bisa dibatalkan.", 'confirm', clearAllReportsFromFirestore);
+            showModal("Yakin ingin menghapus semua riwayat laporan? Tindakan ini tidak bisa dibatalkan.", 'confirm', () => {
+                localStorage.removeItem("laporanSDMList");
+                renderHistory(); // Re-render history (will show "Tidak ada riwayat laporan")
+                populateFilterOptions(); // Clear filter options
+                showModal("Semua riwayat laporan telah dihapus.", 'alert');
+            });
         }
 
         // --- Gemini API Integration ---
@@ -943,10 +1313,12 @@ Hasil Singkat: ${hasilInput}
 
 Perluasan:`;
 
-                const chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
+                let chatHistory = [];
+                chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+
                 const payload = { contents: chatHistory };
-                const apiKey = "";
-                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+                const apiKey = ""; // Canvas will provide this at runtime
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
                 const response = await fetch(apiUrl, {
                     method: 'POST',
@@ -960,7 +1332,7 @@ Perluasan:`;
                     result.candidates[0].content && result.candidates[0].content.parts &&
                     result.candidates[0].content.parts.length > 0) {
                     const text = result.candidates[0].content.parts[0].text;
-                    document.getElementById("hasil").value = text.trim();
+                    document.getElementById("hasil").value = text.trim(); // Update the textarea
                 } else {
                     showModal("Gagal memperluas hasil. Respon dari AI tidak valid.", 'alert');
                     console.error("Gemini API response structure unexpected:", result);
@@ -977,6 +1349,7 @@ Perluasan:`;
         // Function to add the web watermark to the display area
         function addWebWatermark() {
             const outputDiv = document.getElementById('output');
+            // Remove existing watermark if any
             let existingWatermark = outputDiv.querySelector('.web-watermark');
             if (existingWatermark) {
                 existingWatermark.remove();
@@ -997,20 +1370,37 @@ Perluasan:`;
             }
         }
 
+
         // Load history and set default date when the page loads
         window.addEventListener("load", () => {
+            // Set default date to today
             const tanggalInput = document.getElementById('tanggal');
-            if (tanggalInput) {
+            if (tanggalInput) { // Add null check
                 const today = new Date();
                 const year = today.getFullYear();
-                const month = String(today.getMonth() + 1).padStart(2, '0');
+                const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
                 const day = String(today.getDate()).padStart(2, '0');
                 tanggalInput.value = `${year}-${month}-${day}`;
             } else {
                 console.error("Elemen dengan ID 'tanggal' tidak ditemukan saat memuat halaman.");
             }
-            addDefaultParticipantInput();
+
+            addDefaultParticipantInput(); // Add the initial participant input
+            populateFilterOptions(); // Populate filters first
+            renderHistory(); // Then render history with initial filters
+
+            // Register service worker
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('./service-worker.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                    })
+                    .catch(err => {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+            }
         });
     </script>
+
 </body>
 </html>

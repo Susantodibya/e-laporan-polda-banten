@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>e-Laporan Kegiatan SDM Polda Banten</title>
+
+    <!-- Google Fonts - Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- html2pdf.js CDN for PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <!-- PWA: Link to manifest.json -->
+    <link rel="manifest" href="./manifest.json">
+
+    <!-- Memuat file CSS eksternal -->
+    <link rel="stylesheet" href="style.css">
+    
+</head>
+<body>
+
+    <h2>e-Laporan Kegiatan SDM Polda Banten</h2>
+    <div id="user-info"></div>
+
+    <form id="reportForm">
+        <input type="hidden" id="editingReportId" value="">
+
+        <label for="jenis">Jenis Kegiatan:</label>
+        <input type="text" id="jenis" placeholder="Contoh: Rapat, Supervisi, Kunjungan" required />
+
+        <label for="kepada">Kepada Yth:</label>
+        <select id="kepada">
+            <option value="Kapolda Banten">Kapolda Banten</option>
+            <option value="Wakapolda Banten">Wakapolda Banten</option>
+            <option value="Karo SDM Polda Banten" selected>Karo SDM Polda Banten</option>
+            <option value="Irwasda Polda Banten">Irwasda Polda Banten</option>
+        </select>
+
+        <label for="dari">Dari:</label>
+        <select id="dari">
+            <option value="Kapolda Banten">Kapolda Banten</p>
+            <option value="Karo SDM Polda Banten">Karo SDM Polda Banten</option>
+            <option value="Kabagbinkar Ro SDM Polda Banten" selected>Kabagbinkar Ro SDM Polda Banten</option>
+            <option value="Kasubbagmutjab Bag Binkar">Kasubbagmutjab Bag Binkar</option>
+        </select>
+
+        <label for="tanggal">Hari, Tanggal:</label>
+        <input type="date" id="tanggal" required />
+
+        <label for="waktu">Waktu:</label>
+        <input type="time" id="waktu" required />
+
+        <label for="tempat">Tempat:</label>
+        <input type="text" id="tempat" placeholder="Contoh: Ruang Kerja Kabagbinkar" required />
+
+        <label for="pimpinan">Pimpinan Kegiatan:</label>
+        <input list="pimpinan-options" id="pimpinan" placeholder="Ketik atau pilih jabatan" required />
+        <datalist id="pimpinan-options">
+            <option value="Kapolda Banten"></option>
+            <option value="Karo SDM Polda Banten"></option>
+            <option value="Kabagbantanas Set NCB Interpol Indonesia"></option>
+            <option value="Dirbintibmas Baharkam Polri"></option>
+        </datalist>
+
+        <label>Dihadiri oleh:</label>
+        <div id="daftar-hadir-container">
+            <!-- Default participant input will be added by JavaScript on load/reset -->
+        </div>
+        <datalist id="daftar-hadir">
+            <option value="Kasubbagmutjab Bag Binkar Ro SDM Polda Banten"></option>
+            <option value="Staff Bagbinkar Ro SDM Polda Banten"></option>
+            <option value="Kasubbagsisminkar"></option>
+            <option value="Kabag Dalpers"></option>
+            <option value="Auditor Kepolisian Madya Tk. III Itwasda Polda Banten"></option>
+            <option value="Dansatbrimob Polda Banten"></option>
+            <option value="Dirintelkam Polda Banten"></option>
+            <option value="Dirlantas Polda Banten"></option>
+            <option value="Dirpamobvit Polda Banten"></option>
+            <option value="Dirpolairud Polda Banten"></option>
+            <option value="Dirreskrimum Polda Banten"></option>
+            <option value="Dirreskrimsus Polda Banten"></option>
+            <option value="Dirresnarkoba Polda Banten"></option>
+            <option value="Dirsamapta Polda Banten"></option>
+            <option value="Gadik Madya SPN Polda Banten"></option>
+            <option value="Irwasda Polda Banten"></option>
+            <option value="Ka SPN Polda Banten"></option>
+            <option value="Kabagbekum Rolog Polda Banten"></option>
+            <option value="Kagabbinopsnal Ditsabhara Polda Banten"></option>
+            <option value="Kabagbinopsnal Ditsamapta Polda Banten"></option>
+            <option value="Kabagdalops Roops Polda Banten"></option>
+            <option value="Kabaginfolog Rolog Polda Banten"></option>
+            <option value="Kabagops Polresta Serang Kota Polda Banten"></option>
+            <option value="Kabagrenprogar Rorena Polda Banten"></option>
+            <option value="Kabagstrajemen Rorena Polda Banten"></option>
+            <option value="Kabid TIK Polda Banten"></option>
+            <option value="Kabiddokkes Polda Banten"></option>
+            <option value="Kabidhumas Polda Banten"></option>
+            <option value="Kabidkeu Polda Banten"></option>
+            <option value="Kabidkum Polda Banten"></option>
+            <option value="Kabidpropam Polda Banten"></option>
+            <option value="Karorena Polda Banten"></option>
+            <option value="Karolog Polda Banten"></option>
+            <option value="Karoops Polda Banten"></option>
+            <option value="Karo SDM Polda Banten"></option>
+            <option value="Kapolda Banten"></option>
+            <option value="Kapolresta Serang Kota Polda Banten"></option>
+            <option value="Kapolresta Tangerang Polda Banten"></option>
+            <option value="Kasubbagrenmin Ditresnarkoba Polda Banten"></option>
+            <option value="Kasubbid PID Bidhumas Polda Banten"></option>
+            <option value="Kasubbidmulmed Bidhumas Polda Banten"></option>
+            <option value="Kasubdit 1 Ditintelkam Polda Banten"></option>
+            <option value="Kasubdit 2 Ditreskrimsus Polda Banten"></option>
+            <option value="Kasubdit 2 Ditresnarkoba Polda Banten"></option>
+            <option value="Kasubdit 3 Ditintelkam Polda Banten"></option>
+            <option value="Kasubdit Bhabinkamtibmas Ditbinmas Polda Banten"></option>
+            <option value="Kasubdit Bintibsos Ditbinmas Polda Banten"></option>
+            <option value="Kasubdit Gakkum Ditlantas Polda Banten"></option>
+            <option value="Pamen Ditpamobvit Polda Banten"></option>
+            <option value="Pamen Polda Banten"></option>
+            <option value="Penata Kebijakan Kapolri Madya Tk. III Polda Banten"></option>
+            <option value="Penyidik Madya Ditresnarkoba Polda Banten"></option>
+            <option value="Wadirbinmas Polda Banten"></option>
+            <option value="Wakapolda Banten"></option>
+            <option value="Kapolres Cilegon Polda Banten"></option>
+            <option value="Kapolres Pandeglang Polda Banten"></option>
+            <option value="Kapolres Serang Polda Banten"></option>
+            <option value="Paurmutjab Bagbinkar Ro SDM Polda Banten"></option>
+            <option value="Staff Biro SDM Polda Banten"></option>
+            <option value="Staff Bagbinkar SDM Polda Banten"></option>
+        </datalist>
+        <button type="button" onclick="tambahPeserta()">+ Tambah Peserta</button>
+
+        <label for="hasil">Hasil yang Didapat:</label>
+        <textarea id="hasil" placeholder="Tulis ringkasan hasil kegiatan secara poin" required></textarea>
+        <button type="button" id="elaborateHasilBtn" class="gemini-btn" onclick="elaborateHasil()">✨ Perluas Hasil</button>
+
+
+        <label for="sapaan">Sapaan Akhir Kepada:</label>
+        <select id="sapaan">
+            <option value="Komandan" selected>Komandan</option>
+            <option value="Jenderal">Jenderal</option>
+        </select>
+
+        <div class="button-group">
+            <button type="button" id="mainActionButton" onclick="generateLaporan()">Buat Laporan</button>
+            <button type="button" id="cancelEditButton" style="display:none;" onclick="cancelEdit()">Batalkan Edit</button>
+            <button type="button" onclick="downloadPDF()">Download PDF</button>
+            <button type="button" onclick="copyLaporan()">Copy Laporan</button>
+            <button type="button" onclick="hapusLaporan()">Hapus Laporan</button>
+        </div>
+    </form>
+
+    <hr>
+
+    <h3>Hasil Laporan:</h3>
+    <div id="output">
+        <div id="reportDisplayArea"></div>
+    </div>
+
+    <hr>
+
+    <h3>Riwayat Laporan:</h3>
+    <div id="history-section">
+        <div class="filter-section">
+            <div class="filter-group">
+                <label for="searchQuery">Cari Laporan:</label>
+                <input type="text" id="searchQuery" placeholder="Kata kunci..." onkeyup="renderHistory()">
+            </div>
+            <div class="filter-group">
+                <label for="filterJenis">Jenis Kegiatan:</label>
+                <select id="filterJenis" onchange="renderHistory()">
+                    <option value="">Semua</option>
+                    <!-- Options will be dynamically populated -->
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="filterKepada">Kepada Yth:</label>
+                <select id="filterKepada" onchange="renderHistory()">
+                    <option value="">Semua</option>
+                    <!-- Options will be dynamically populated -->
+                </select>
+            </div>
+            <button onclick="renderHistory()">Terapkan Filter</button>
+        </div>
+        <div id="history">
+            <!-- Report history will be displayed here -->
+        </div>
+        <div class="button-group">
+            <button type="button" onclick="clearAllHistory()" class="delete-btn">Bersihkan Semua Riwayat</button>
+        </div>
+    </div>
+
+    <!-- Custom Modal Structure -->
+    <div id="customModal" class="modal-overlay">
+        <div class="modal-content">
+            <h4 id="modalTitle"></h4>
+            <p id="modalMessage"></p>
+            <div class="modal-buttons">
+                <button id="modalConfirmBtn" class="confirm-btn">OK</button>
+                <button id="modalCancelBtn" class="cancel-btn">Batal</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, doc, setDoc, deleteDoc, getDocs, onSnapshot, query, where, writeBatch } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        
+        // Atur level log Firebase
+        setLogLevel('debug');
+        
+        // Global variables provided by the environment
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+        
+        // Firebase initialization and auth state management
+        let db;
+        let auth;
+        let currentUserId = null;
+        let unsubscribeHistory = null;
+        
+        const app = initializeApp(firebaseConfig);
+        db = getFirestore(app);
+        auth = getAuth(app);
+        
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUserId = user.uid;
+                document.getElementById('user-info').textContent = `User ID: ${currentUserId}`;
+                console.log("Authenticated with user ID:", currentUserId);
+                // Listen to the user's history in real-time
+                if (unsubscribeHistory) {
+                    unsubscribeHistory();
+                }
+                const q = query(collection(db, "artifacts", appId, "users", currentUserId, "laporan"));
+                unsubscribeHistory = onSnapshot(q, (querySnapshot) => {
+                    const history = [];
+                    querySnapshot.forEach((doc) => {
+                        history.push({ id: doc.id, ...doc.data() });
+                    });
+                    renderHistory(history);
+                    populateFilterOptions(history);
+                });
+            } else {
+                currentUserId = null;
+                document.getElementById('user-info').textContent = `Belum terautentikasi.`;
+                console.log("No user is authenticated. Signing in anonymously.");
+                if (initialAuthToken) {
+                    try {
+                        await signInWithCustomToken(auth, initialAuthToken);
+                        console.log("Signed in with custom token.");
+                    } catch (error) {
+                        console.error("Error signing in with custom token:", error);
+                        await signInAnonymously(auth);
+                        console.log("Signed in anonymously as a fallback.");
+                    }
+                } else {
+                    await signInAnonymously(auth);
+                    console.log("Signed in anonymously.");
+                }
+            }
+        });
+        
+        // Drag-and-drop variables
+        let draggedItem = null;
+        
+        // Event listeners for drag and drop
+        const daftarHadirContainer = document.getElementById("daftar-hadir-container");
+        daftarHadirContainer.addEventListener("dragstart", (e) => {
+            draggedItem = e.target;
+            setTimeout(() => {
+                e.target.classList.add("dragging");
+            }, 0);
+        });
+        
+        daftarHadirContainer.addEventListener("dragover", (e) => {
+            e.preventDefault();
+            if (!draggedItem) return;
+            const afterElement = getDragAfterElement(daftarHadirContainer, e.clientY);
+            const currentElement = draggedItem;
+            if (afterElement == null) {
+                daftarHadirContainer.appendChild(currentElement);
+            } else {
+                daftarHadirContainer.insertBefore(currentElement, afterElement);
+            }
+        });
+        
+        daftarHadirContainer.addEventListener("dragend", () => {
+            draggedItem.classList.remove("dragging");
+            draggedItem = null;
+        });
+        
+        function getDragAfterElement(container, y) {
+            const draggableElements = [...container.querySelectorAll('div[draggable="true"]:not(.dragging)')];
+            return draggableElements.reduce((closest, child) => {
+                const box = child.getBoundingClientRect();
+                const offset = y - box.top - box.height / 2;
+                if (offset < 0 && offset > closest.offset) {
+                    return { offset: offset, element: child };
+                } else {
+                    return closest;
+                }
+            }, { offset: Number.NEGATIVE_INFINITY }).element;
+        }
+
+        // Global variable to store the confirm callback
+        let confirmCallback = null;
+
+        /**
+         * Displays a custom modal dialog.
+         * @param {string} message - The message to display in the modal.
+         * @param {'alert'|'confirm'} type - The type of modal ('alert' or 'confirm').
+         * @param {function} [onConfirm] - Callback function to execute if 'confirm' is clicked.
+         */
+        function showModal(message, type, onConfirm = null) {
+            const modal = document.getElementById('customModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalMessage = document.getElementById('modalMessage');
+            const modalConfirmBtn = document.getElementById('modalConfirmBtn');
+            const modalCancelBtn = document.getElementById('modalCancelBtn');
+
+            modalMessage.textContent = message;
+            confirmCallback = onConfirm; // Store the callback
+
+            if (type === 'alert') {
+                modalTitle.textContent = 'Informasi';
+                modalConfirmBtn.textContent = 'OK';
+                modalConfirmBtn.style.display = 'inline-block';
+                modalConfirmBtn.onclick = hideModal;
+                modalCancelBtn.style.display = 'none';
+            } else if (type === 'confirm') {
+                modalTitle.textContent = 'Konfirmasi';
+                modalConfirmBtn.textContent = 'Ya';
+                modalConfirmBtn.style.display = 'inline-block';
+                modalConfirmBtn.onclick = () => {
+                    if (confirmCallback) {
+                        confirmCallback();
+                    }
+                    hideModal();
+                };
+                modalCancelBtn.textContent = 'Tidak';
+                modalCancelBtn.style.display = 'inline-block';
+                modalCancelBtn.onclick = hideModal;
+            }
+
+            modal.classList.add('visible');
+        }
+
+        /**
+         * Hides the custom modal dialog.
+         */
+        function hideModal() {
+            document.getElementById('customModal').classList.remove('visible');
+            confirmCallback = null; // Clear the callback
+        }
+
+        // Function to add more participant input fields
+        function tambahPeserta(value = '') {
+            const container = document.getElementById("daftar-hadir-container");
+            const newParticipantDiv = document.createElement("div"); // Create a div to hold input and button
+            newParticipantDiv.style.display = "flex";
+            newParticipantDiv.style.alignItems = "center";
+            newParticipantDiv.style.gap = "5px";
+            newParticipantDiv.draggable = true; // Make the whole div draggable
+
+            const input = document.createElement("input");
+            input.setAttribute("list", "daftar-hadir");
+            input.className = "hadir";
+            input.placeholder = "Ketik atau pilih peserta";
+            input.style.marginBottom = "0"; // Override default margin for stacked inputs
+            if (value) {
+                input.value = value;
+            }
+
+            const removeBtn = document.createElement("button");
+            removeBtn.textContent = "X";
+            removeBtn.className = "delete-participant-btn";
+            removeBtn.type = "button";
+            removeBtn.onclick = function() {
+                container.removeChild(newParticipantDiv);
+            };
+
+            newParticipantDiv.appendChild(input);
+            newParticipantDiv.appendChild(removeBtn);
+            container.appendChild(newParticipantDiv);
+        }
+
+        // Function to get current form data
+        function getFormData() {
+            const jenis = document.getElementById("jenis").value.trim();
+            const kepada = document.getElementById("kepada").value;
+            const dari = document.getElementById("dari").value;
+            const tanggalInput = document.getElementById("tanggal").value;
+            const waktuInput = document.getElementById("waktu").value;
+            const tempat = document.getElementById("tempat").value.trim();
+            const pimpinan = document.getElementById("pimpinan").value.trim();
+            const hasil = document.getElementById("hasil").value.trim();
+            const sapaan = document.getElementById("sapaan").value;
+
+            const hadirElements = document.querySelectorAll(".hadir");
+            const daftarHadirArray = Array.from(hadirElements)
+                .map(el => el.value.trim())
+                .filter(Boolean);
+
+            return {
+                jenis: jenis,
+                kepada: kepada,
+                dari: dari,
+                tanggal: tanggalInput,
+                waktu: waktuInput,
+                tempat: tempat,
+                pimpinan: pimpinan,
+                hasil: hasil,
+                sapaan: sapaan,
+                peserta: daftarHadirArray
+            };
+        }
+
+        // Function to validate form data
+        function validateFormData(formData) {
+            if (!formData.jenis || !formData.tanggal || !formData.waktu || !formData.tempat || !formData.pimpinan || !formData.hasil) {
+                showModal("Mohon lengkapi semua kolom penting.", 'alert');
+                return false;
+            }
+            return true;
+        }
+
+        // Function to format report content
+        function formatReportContent(formData) {
+            const dateObj = new Date(formData.tanggal + 'T00:00:00');
+            const formattedTanggal = dateObj.toLocaleDateString('id-ID', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            const formattedWaktu = `${formData.waktu} WIB s.d Selesai`;
+
+            let hadirListFormatted = "";
+            if (formData.peserta.length > 0) {
+                hadirListFormatted = formData.peserta.map((item, index) => `${index + 1}. ${item}`).join('\n');
+            } else {
+                hadirListFormatted = "Tidak ada yang hadir.";
+            }
+
+            return `*Kepada Yth : ${formData.kepada}*
+*Dari : ${formData.dari}*
+
+Assalamualaikum Wr. Wb.
+Selamat siang ${formData.sapaan}. Mohon izin melaporkan pelaksanaan ${formData.jenis} dengan rincian sebagai berikut:
+
+*Pelaksanaan Kegiatan:*
+1. Hari, Tanggal: ${formattedTanggal};
+2. Pukul : ${formattedWaktu};
+3. Tempat : ${formData.tempat};
+4. Pimpinan Kegiatan : ${formData.pimpinan}.
+
+*Dihadiri oleh:*
+${hadirListFormatted}
+
+*Hasil yang Didapat:*
+${formData.hasil}
+
+*Penutup:*
+Kegiatan berjalan dengan tertib dan lancar, Demikian yang dapat kami laporkan kepada ${formData.sapaan}, dan kami haturkan terima kasih.
+(dokumentasi terlampir)
+
+Wassalamu'alaikum Wr. Wb.
+
+*Biro SDM Polda Banten*
+*Mewujudkan SDM Polri Yang Unggul*`;
+        }
+        
+        // --- Firestore Functions ---
+        async function saveReportToFirestore(reportData) {
+            if (!currentUserId) {
+                console.error("User not authenticated.");
+                showModal("Autentikasi gagal. Silakan coba lagi.", 'alert');
+                return;
+            }
+            try {
+                const reportRef = doc(collection(db, "artifacts", appId, "users", currentUserId, "laporan"));
+                await setDoc(reportRef, reportData);
+            } catch (error) {
+                console.error("Error saving document to Firestore:", error);
+                showModal("Gagal menyimpan laporan. Terjadi kesalahan.", 'alert');
+            }
+        }
+        
+        async function updateReportInFirestore(id, reportData) {
+            if (!currentUserId) {
+                console.error("User not authenticated.");
+                showModal("Autentikasi gagal. Silakan coba lagi.", 'alert');
+                return;
+            }
+            try {
+                const reportRef = doc(db, "artifacts", appId, "users", currentUserId, "laporan", id);
+                await setDoc(reportRef, reportData);
+            } catch (error) {
+                console.error("Error updating document in Firestore:", error);
+                showModal("Gagal memperbarui laporan. Terjadi kesalahan.", 'alert');
+            }
+        }
+        
+        async function deleteReportFromFirestore(id) {
+            if (!currentUserId) {
+                console.error("User not authenticated.");
+                showModal("Autentikasi gagal. Silakan coba lagi.", 'alert');
+                return;
+            }
+            try {
+                const reportRef = doc(db, "artifacts", appId, "users", currentUserId, "laporan", id);
+                await deleteDoc(reportRef);
+                showModal("Laporan berhasil dihapus dari riwayat.", 'alert');
+            } catch (error) {
+                console.error("Error deleting document from Firestore:", error);
+                showModal("Gagal menghapus laporan. Terjadi kesalahan.", 'alert');
+            }
+        }
+        
+        async function clearAllReportsFromFirestore() {
+            if (!currentUserId) {
+                console.error("User not authenticated.");
+                showModal("Autentikasi gagal. Silakan coba lagi.", 'alert');
+                return;
+            }
+            try {
+                const q = query(collection(db, "artifacts", appId, "users", currentUserId, "laporan"));
+                const querySnapshot = await getDocs(q);
+                if (querySnapshot.empty) {
+                     showModal("Tidak ada riwayat untuk dihapus.", 'alert');
+                     return;
+                }
+                const batch = writeBatch(db);
+                querySnapshot.forEach((doc) => {
+                    batch.delete(doc.ref);
+                });
+                await batch.commit();
+                showModal("Semua riwayat laporan telah dihapus.", 'alert');
+            } catch (error) {
+                console.error("Error clearing all documents from Firestore:", error);
+                showModal("Gagal menghapus semua riwayat. Terjadi kesalahan.", 'alert');
+            }
+        }
+
+
+        // Function to generate a new report
+        async function generateLaporan() {
+            const formData = getFormData();
+            if (!validateFormData(formData)) {
+                return;
+            }
+
+            const reportContent = formatReportContent(formData);
+            document.getElementById("reportDisplayArea").innerHTML = reportContent.replace(/\n/g, '<br>');
+            addWebWatermark();
+
+            const reportData = {
+                content: reportContent,
+                data: formData,
+                time: new Date().toLocaleString('id-ID', {
+                    year: 'numeric', month: 'long', day: 'numeric',
+                    hour: '2-digit', minute: '2-digit', second: '2-digit',
+                    hour12: false
+                }),
+                timestamp: Date.now()
+            };
+            await saveReportToFirestore(reportData);
+            showModal("Laporan berhasil dibuat dan disimpan!", 'alert');
+            resetForm();
+        }
+
+        // Function to update an existing report
+        async function updateLaporan() {
+            const editingId = document.getElementById("editingReportId").value;
+            if (!editingId) {
+                showModal("Tidak ada laporan yang sedang diedit.", 'alert');
+                return;
+            }
+
+            const formData = getFormData();
+            if (!validateFormData(formData)) {
+                return;
+            }
+
+            const reportContent = formatReportContent(formData);
+            document.getElementById("reportDisplayArea").innerHTML = reportContent.replace(/\n/g, '<br>');
+            addWebWatermark();
+
+            const reportData = {
+                content: reportContent,
+                data: formData,
+                time: new Date().toLocaleString('id-ID', {
+                    year: 'numeric', month: 'long', day: 'numeric',
+                    hour: '2-digit', minute: '2-digit', second: '2-digit',
+                    hour12: false
+                }),
+                timestamp: Date.now()
+            };
+
+            await updateReportInFirestore(editingId, reportData);
+            showModal("Laporan berhasil diperbarui!", 'alert');
+            resetForm();
+        }
+
+        // Function to reset the form and action buttons
+        function resetForm() {
+            document.getElementById("reportForm").reset();
+            document.getElementById("editingReportId").value = "";
+            document.getElementById("mainActionButton").textContent = "Buat Laporan";
+            document.getElementById("mainActionButton").onclick = generateLaporan;
+            document.getElementById("cancelEditButton").style.display = "none";
+
+            const container = document.getElementById("daftar-hadir-container");
+            container.innerHTML = '';
+            addDefaultParticipantInput();
+
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            
+            const tanggalInput = document.getElementById('tanggal');
+            if (tanggalInput) {
+                tanggalInput.value = `${year}-${month}-${day}`;
+            } else {
+                console.error("Error: Element with ID 'tanggal' not found during resetForm.");
+            }
+
+            removeWebWatermark();
+            document.getElementById("reportDisplayArea").innerHTML = '';
+        }
+
+        // Helper function to add the default participant input
+        function addDefaultParticipantInput() {
+            const container = document.getElementById("daftar-hadir-container");
+            const newParticipantDiv = document.createElement("div");
+            newParticipantDiv.style.display = "flex";
+            newParticipantDiv.style.alignItems = "center";
+            newParticipantDiv.style.gap = "5px";
+            newParticipantDiv.draggable = true;
+
+            const input = document.createElement("input");
+            input.setAttribute("list", "daftar-hadir");
+            input.className = "hadir";
+            input.value = "Kasubbagmutjab Bag Binkar Ro SDM Polda Banten";
+            input.style.marginBottom = "0";
+
+            const removeBtn = document.createElement("button");
+            removeBtn.textContent = "X";
+            removeBtn.className = "delete-participant-btn";
+            removeBtn.type = "button";
+            removeBtn.onclick = function() {
+                container.removeChild(newParticipantDiv);
+            };
+
+            newParticipantDiv.appendChild(input);
+            newParticipantDiv.appendChild(removeBtn);
+            container.appendChild(newParticipantDiv);
+        }
+
+        // Function to cancel editing and reset form
+        function cancelEdit() {
+            showModal("Yakin ingin membatalkan pengeditan? Perubahan yang belum disimpan akan hilang.", 'confirm', () => {
+                resetForm();
+                showModal("Pengeditan dibatalkan. Formulir diatur ulang.", 'alert');
+            });
+        }
+
+        // Function to download the report as PDF
+        function downloadPDF() {
+            const element = document.getElementById("reportDisplayArea");
+            if (!element.innerHTML.trim()) {
+                showModal("Tidak ada laporan yang bisa diunduh.", 'alert');
+                return;
+            }
+
+            const printElement = document.createElement('div');
+            printElement.innerHTML = element.innerHTML;
+
+            const watermark = document.createElement('div');
+            watermark.className = 'pdf-watermark';
+            watermark.textContent = 'Bripda MEEP';
+            printElement.appendChild(watermark);
+
+            const pdfWatermarkStyle = document.createElement('style');
+            pdfWatermarkStyle.textContent = `
+                .pdf-watermark {
+                    position: absolute;
+                    bottom: 20px;
+                    right: 20px;
+                    font-size: 12px;
+                    color: rgba(0, 0, 0, 0.3);
+                    font-weight: bold;
+                    transform: rotate(-15deg);
+                    transform-origin: 100% 100%;
+                    z-index: 9999;
+                }
+            `;
+            printElement.appendChild(pdfWatermarkStyle);
+
+
+            html2pdf().from(printElement).set({
+                margin: 0.5,
+                filename: 'laporan-kegiatan-sdm.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+            }).save();
+        }
+
+        // Function to copy the report to clipboard
+        function copyLaporan() {
+            const outputElement = document.getElementById("reportDisplayArea");
+            if (!outputElement.innerHTML.trim()) {
+                showModal("Belum ada laporan untuk disalin.", 'alert');
+                return;
+            }
+            const tempElement = document.createElement("textarea");
+            tempElement.value = outputElement.innerHTML.replace(/<br>/g, '\n').replace(/<[^>]+>/g, "");
+            document.body.appendChild(tempElement);
+            tempElement.select();
+            document.execCommand("copy");
+            document.body.removeChild(tempElement);
+            showModal("Laporan berhasil disalin ke clipboard!", 'alert');
+        }
+
+        // Function to clear the displayed report
+        function hapusLaporan() {
+            showModal("Yakin ingin menghapus laporan yang ditampilkan?", 'confirm', () => {
+                document.getElementById("reportDisplayArea").innerHTML = "";
+                removeWebWatermark();
+                showModal("Laporan berhasil dihapus.", 'alert');
+            });
+        }
+
+        // --- History Functions ---
+
+        // Function to render the history of reports with search and filter
+        function renderHistory(laporanList) {
+            const historyContainer = document.getElementById("history");
+            const searchQuery = document.getElementById('searchQuery').value.toLowerCase();
+            const filterJenis = document.getElementById('filterJenis').value;
+            const filterKepada = document.getElementById('filterKepada').value;
+
+            const filteredList = laporanList.filter(entry => {
+                const data = entry.data || {};
+                const contentText = entry.content.toLowerCase();
+
+                const matchesSearch = searchQuery === '' ||
+                                     contentText.includes(searchQuery) ||
+                                     (data.jenis && data.jenis.toLowerCase().includes(searchQuery)) ||
+                                     (data.kepada && data.kepada.toLowerCase().includes(searchQuery)) ||
+                                     (data.pimpinan && data.pimpinan.toLowerCase().includes(searchQuery)) ||
+                                     (data.hasil && data.hasil.toLowerCase().includes(searchQuery));
+
+                const matchesJenis = filterJenis === '' || (data.jenis && data.jenis === filterJenis);
+                const matchesKepada = filterKepada === '' || (data.kepada && data.kepada === filterKepada);
+
+                return matchesSearch && matchesJenis && matchesKepada;
+            });
+
+            if (filteredList.length === 0) {
+                historyContainer.innerHTML = "<p>Tidak ada riwayat laporan yang cocok dengan kriteria pencarian/filter.</p>";
+                return;
+            }
+
+            historyContainer.innerHTML = filteredList.map(entry => `
+                <div class="history-item">
+                    <strong>Dibuat:</strong> ${entry.time}<br>
+                    <strong>Jenis Kegiatan:</strong> ${entry.data.jenis || 'N/A'}<br>
+                    <strong>Kepada Yth:</strong> ${entry.data.kepada || 'N/A'}<br>
+                    <div class="history-item-buttons">
+                        <button onclick="showLaporan('${entry.id}')">Lihat</button>
+                        <button class="edit-btn" onclick="editLaporanById('${entry.id}')">Edit</button>
+                        <button onclick="copyLaporanById('${entry.id}')">Copy</button>
+                        <button onclick="downloadPDFById('${entry.id}')">PDF</button>
+                        <button class="delete-btn" onclick="deleteLaporanById('${entry.id}')">Hapus</button>
+                    </div>
+                </div>
+            `).join("");
+        }
+
+        // Function to populate filter dropdowns with unique values from history
+        function populateFilterOptions(laporanList) {
+            const filterJenisSelect = document.getElementById('filterJenis');
+            const filterKepadaSelect = document.getElementById('filterKepada');
+
+            const uniqueJenis = new Set(laporanList.map(entry => entry.data && entry.data.jenis).filter(Boolean));
+            const currentFilterJenis = filterJenisSelect.value;
+            filterJenisSelect.innerHTML = '<option value="">Semua</option>' +
+                                         Array.from(uniqueJenis).map(jenis => `<option value="${jenis}">${jenis}</option>`).join('');
+            filterJenisSelect.value = currentFilterJenis;
+
+            const uniqueKepada = new Set(laporanList.map(entry => entry.data && entry.data.kepada).filter(Boolean));
+            const currentFilterKepada = filterKepadaSelect.value;
+            filterKepadaSelect.innerHTML = '<option value="">Semua</option>' +
+                                           Array.from(uniqueKepada).map(kepada => `<option value="${kepada}">${kepada}</option>`).join('');
+            filterKepadaSelect.value = currentFilterKepada;
+        }
+
+        // Function to display a specific report from history in the output area
+        function showLaporan(id) {
+            const reportRef = doc(db, "artifacts", appId, "users", currentUserId, "laporan", id);
+            onSnapshot(reportRef, (docSnap) => {
+                if (docSnap.exists()) {
+                    const item = docSnap.data();
+                    document.getElementById("reportDisplayArea").innerHTML = item.content;
+                    addWebWatermark();
+                    showModal("Laporan dari riwayat ditampilkan.", 'alert');
+                } else {
+                    showModal("Laporan tidak ditemukan.", 'alert');
+                }
+            });
+        }
+
+        // Function to populate the form for editing
+        async function editLaporanById(id) {
+            const reportRef = doc(db, "artifacts", appId, "users", currentUserId, "laporan", id);
+            const docSnap = await getDoc(reportRef);
+            if (!docSnap.exists() || !docSnap.data().data) {
+                showModal("Data laporan tidak ditemukan untuk diedit.", 'alert');
+                return;
+            }
+            const item = docSnap.data();
+            
+            document.getElementById("jenis").value = item.data.jenis || '';
+            document.getElementById("kepada").value = item.data.kepada || 'Karo SDM Polda Banten';
+            document.getElementById("dari").value = item.data.dari || 'Kabagbinkar Ro SDM Polda Banten';
+            document.getElementById("tanggal").value = item.data.tanggal || '';
+            document.getElementById("waktu").value = item.data.waktu || '';
+            document.getElementById("tempat").value = item.data.tempat || '';
+            document.getElementById("pimpinan").value = item.data.pimpinan || '';
+            document.getElementById("hasil").value = item.data.hasil || '';
+            document.getElementById("sapaan").value = item.data.sapaan || 'Komandan';
+
+            const hadirContainer = document.getElementById("daftar-hadir-container");
+            hadirContainer.innerHTML = '';
+
+            if (item.data.peserta && item.data.peserta.length > 0) {
+                item.data.peserta.forEach(peserta => {
+                    const newParticipantDiv = document.createElement("div");
+                    newParticipantDiv.style.display = "flex";
+                    newParticipantDiv.style.alignItems = "center";
+                    newParticipantDiv.style.gap = "5px";
+                    newParticipantDiv.draggable = true;
+
+                    const input = document.createElement("input");
+                    input.setAttribute("list", "daftar-hadir");
+                    input.className = "hadir";
+                    input.value = peserta;
+                    input.style.marginBottom = "0";
+
+                    const removeBtn = document.createElement("button");
+                    removeBtn.textContent = "X";
+                    removeBtn.className = "delete-participant-btn";
+                    removeBtn.type = "button";
+                    removeBtn.onclick = function() {
+                        hadirContainer.removeChild(newParticipantDiv);
+                    };
+                    newParticipantDiv.appendChild(input);
+                    newParticipantDiv.appendChild(removeBtn);
+                    hadirContainer.appendChild(newParticipantDiv);
+                });
+            } else {
+                addDefaultParticipantInput();
+            }
+
+            document.getElementById("editingReportId").value = id;
+            document.getElementById("mainActionButton").textContent = "Simpan Perubahan";
+            document.getElementById("mainActionButton").onclick = updateLaporan;
+            document.getElementById("cancelEditButton").style.display = "inline-block";
+            showModal("Laporan siap untuk diedit. Mohon perbarui formulir.", 'alert');
+        }
+
+        // Function to copy a specific report from history to clipboard
+        async function copyLaporanById(id) {
+            const reportRef = doc(db, "artifacts", appId, "users", currentUserId, "laporan", id);
+            const docSnap = await getDoc(reportRef);
+            if (!docSnap.exists()) return;
+            const item = docSnap.data();
+
+            const temp = document.createElement("textarea");
+            temp.value = item.content.replace(/<br>/g, '\n').replace(/<[^>]+>/g, "");
+            document.body.appendChild(temp);
+            temp.select();
+            document.execCommand("copy");
+            document.body.removeChild(temp);
+            showModal("Laporan dari riwayat berhasil disalin!", 'alert');
+        }
+
+        // Function to download a specific report from history as PDF
+        async function downloadPDFById(id) {
+            const reportRef = doc(db, "artifacts", appId, "users", currentUserId, "laporan", id);
+            const docSnap = await getDoc(reportRef);
+            if (!docSnap.exists()) return;
+            const item = docSnap.data();
+
+            const printElement = document.createElement('div');
+            printElement.innerHTML = item.content;
+
+            const watermark = document.createElement('div');
+            watermark.className = 'pdf-watermark';
+            watermark.textContent = 'Bripda MEEP';
+            printElement.appendChild(watermark);
+            const pdfWatermarkStyle = document.createElement('style');
+            pdfWatermarkStyle.textContent = `
+                .pdf-watermark {
+                    position: absolute;
+                    bottom: 20px;
+                    right: 20px;
+                    font-size: 12px;
+                    color: rgba(0, 0, 0, 0.3);
+                    font-weight: bold;
+                    transform: rotate(-15deg);
+                    transform-origin: 100% 100%;
+                    z-index: 9999;
+                }
+            `;
+            printElement.appendChild(pdfWatermarkStyle);
+
+            html2pdf().from(printElement).set({
+                margin: 0.5,
+                filename: `laporan-kegiatan-sdm-${id}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+            }).save();
+        }
+
+        // Function to delete a specific report from history
+        function deleteLaporanById(id) {
+            showModal("Yakin ingin menghapus laporan ini dari riwayat?", 'confirm', () => deleteReportFromFirestore(id));
+        }
+
+        // Function to clear all reports from history
+        function clearAllHistory() {
+            showModal("Yakin ingin menghapus semua riwayat laporan? Tindakan ini tidak bisa dibatalkan.", 'confirm', clearAllReportsFromFirestore);
+        }
+
+        // --- Gemini API Integration ---
+        async function elaborateHasil() {
+            const jenisKegiatan = document.getElementById("jenis").value.trim();
+            const hasilInput = document.getElementById("hasil").value.trim();
+            const elaborateBtn = document.getElementById("elaborateHasilBtn");
+
+            if (!jenisKegiatan || !hasilInput) {
+                showModal("Mohon isi 'Jenis Kegiatan' dan 'Hasil yang Didapat' terlebih dahulu untuk memperluas.", 'alert');
+                return;
+            }
+
+            elaborateBtn.disabled = true;
+            const originalBtnText = elaborateBtn.innerHTML;
+            elaborateBtn.innerHTML = 'Memperluas...';
+
+            try {
+                const prompt = `Perluas dan berikan detail lebih lanjut pada hasil kegiatan berikut, dengan mempertimbangkan jenis kegiatan. Gunakan bahasa formal dan profesional, cocok untuk laporan resmi Polda Banten.
+
+Jenis Kegiatan: ${jenisKegiatan}
+Hasil Singkat: ${hasilInput}
+
+Perluasan:`;
+
+                const chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
+                const payload = { contents: chatHistory };
+                const apiKey = "";
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    const text = result.candidates[0].content.parts[0].text;
+                    document.getElementById("hasil").value = text.trim();
+                } else {
+                    showModal("Gagal memperluas hasil. Respon dari AI tidak valid.", 'alert');
+                    console.error("Gemini API response structure unexpected:", result);
+                }
+            } catch (error) {
+                showModal("Terjadi kesalahan saat menghubungi AI: " + error.message, 'alert');
+                console.error("Error calling Gemini API:", error);
+            } finally {
+                elaborateBtn.disabled = false;
+                elaborateBtn.innerHTML = originalBtnText;
+            }
+        }
+
+        // Function to add the web watermark to the display area
+        function addWebWatermark() {
+            const outputDiv = document.getElementById('output');
+            let existingWatermark = outputDiv.querySelector('.web-watermark');
+            if (existingWatermark) {
+                existingWatermark.remove();
+            }
+
+            const watermark = document.createElement('div');
+            watermark.className = 'web-watermark';
+            watermark.textContent = 'Bripda MEEP';
+            outputDiv.appendChild(watermark);
+        }
+
+        // Function to remove the web watermark from the display area
+        function removeWebWatermark() {
+            const outputDiv = document.getElementById('output');
+            let existingWatermark = outputDiv.querySelector('.web-watermark');
+            if (existingWatermark) {
+                existingWatermark.remove();
+            }
+        }
+
+        // Load history and set default date when the page loads
+        window.addEventListener("load", () => {
+            const tanggalInput = document.getElementById('tanggal');
+            if (tanggalInput) {
+                const today = new Date();
+                const year = today.getFullYear();
+                const month = String(today.getMonth() + 1).padStart(2, '0');
+                const day = String(today.getDate()).padStart(2, '0');
+                tanggalInput.value = `${year}-${month}-${day}`;
+            } else {
+                console.error("Elemen dengan ID 'tanggal' tidak ditemukan saat memuat halaman.");
+            }
+            addDefaultParticipantInput();
+        });
+    </script>
+</body>
+</html>

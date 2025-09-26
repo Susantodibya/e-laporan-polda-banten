@@ -542,8 +542,7 @@ Wassalamu'alaikum Wr. Wb.
                 await batch.commit();
                 showModal("Semua riwayat laporan telah dihapus.", 'alert');
             } catch (error) {
-                console.error("Error clearing all documents from Firestore:", error);
-                showModal("Gagal menghapus semua riwayat. Terjadi kesalahan.", 'alert');
+                console.error("Gagal menghapus semua riwayat. Terjadi kesalahan.", 'alert');
             }
         }
 
@@ -843,28 +842,7 @@ Wassalamu'alaikum Wr. Wb.
 
             if (item.data.peserta && item.data.peserta.length > 0) {
                 item.data.peserta.forEach(peserta => {
-                    const newParticipantDiv = document.createElement("div");
-                    newParticipantDiv.style.display = "flex";
-                    newParticipantDiv.style.alignItems = "center";
-                    newParticipantDiv.style.gap = "5px";
-                    newParticipantDiv.draggable = true;
-
-                    const input = document.createElement("input");
-                    input.setAttribute("list", "daftar-hadir");
-                    input.className = "hadir";
-                    input.value = peserta;
-                    input.style.marginBottom = "0";
-
-                    const removeBtn = document.createElement("button");
-                    removeBtn.textContent = "X";
-                    removeBtn.className = "delete-participant-btn";
-                    removeBtn.type = "button";
-                    removeBtn.onclick = function() {
-                        hadirContainer.removeChild(newParticipantDiv);
-                    };
-                    newParticipantDiv.appendChild(input);
-                    newParticipantDiv.appendChild(removeBtn);
-                    hadirContainer.appendChild(newParticipantDiv);
+                    tambahPeserta(peserta);
                 });
             } else {
                 addDefaultParticipantInput();

@@ -1,0 +1,498 @@
+:root {
+    --primary-blue: #4A90E2;
+    --light-blue: #EBF5FF;
+    --dark-blue: #0056b3;
+    --text-dark: #333333;
+    --text-medium: #555555;
+    --bg-light: #F0F2F5;
+    --content-bg: #FFFFFF;
+    --border-light: #E0E0E0;
+    --shadow-light: rgba(0, 0, 0, 0.08);
+    --shadow-medium: rgba(0, 0, 0, 0.15);
+    --red-danger: #dc3545;
+    --gemini-green: #34A853;
+    --orange-edit: #ffc107;
+    --dark-orange-edit: #e0a800;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-light);
+    padding: 20px;
+    line-height: 1.6;
+    color: var(--text-dark);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+}
+
+h2, h3 {
+    text-align: center;
+    color: var(--primary-blue);
+    margin-bottom: 25px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+form, #output, #history-section {
+    background-color: var(--content-bg);
+    padding: 30px;
+    max-width: 750px;
+    width: 100%;
+    margin: 20px auto;
+    box-shadow: 0 5px 15px var(--shadow-light);
+    border-radius: 12px;
+    border: 1px solid var(--border-light);
+}
+
+#user-info {
+    background-color: var(--content-bg);
+    padding: 10px 20px;
+    max-width: 750px;
+    width: 100%;
+    margin: 0 auto 20px;
+    box-shadow: 0 5px 15px var(--shadow-light);
+    border-radius: 12px;
+    border: 1px solid var(--border-light);
+    text-align: center;
+    font-size: 0.9em;
+    color: var(--text-medium);
+}
+
+form {
+    margin-top: 0;
+}
+
+label {
+    font-weight: 500;
+    display: block;
+    margin-top: 20px;
+    margin-bottom: 5px;
+    color: var(--text-medium);
+    font-size: 0.95em;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 12px 15px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border: 1px solid var(--border-light);
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-size: 1em;
+    color: var(--text-dark);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input:focus, select:focus, textarea:focus {
+    border-color: var(--primary-blue);
+    outline: none;
+    box-shadow: 0 0 0 3px var(--light-blue);
+}
+
+textarea {
+    min-height: 140px;
+    resize: vertical;
+}
+
+button {
+    padding: 12px 25px;
+    background: linear-gradient(135deg, var(--primary-blue) 0%, #6A9EEB 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin: 10px 5px;
+    font-size: 1em;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+button:hover {
+    background: linear-gradient(135deg, var(--dark-blue) 0%, var(--primary-blue) 100%);
+    box-shadow: 0 6px 15px var(--shadow-medium);
+    transform: translateY(-2px);
+}
+
+button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.button-group {
+    text-align: center;
+    margin-top: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+#output {
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-size: 1em;
+    color: var(--text-dark);
+    position: relative;
+    overflow: hidden;
+    min-height: 200px;
+}
+
+#output p, #output ul, #output li {
+    margin: 0;
+    padding: 0;
+    line-height: inherit;
+}
+
+#output .bold-text {
+    font-weight: bold;
+}
+
+#history-section {
+    margin-bottom: 40px;
+}
+
+.history-item {
+    border: 1px solid var(--border-light);
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    background-color: var(--bg-light);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.history-item strong {
+    color: var(--primary-blue);
+}
+
+.history-item-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+.history-item-buttons button {
+    margin: 0;
+    padding: 8px 15px;
+    font-size: 0.9em;
+    box-shadow: none;
+    background: var(--primary-blue);
+}
+
+.history-item-buttons button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.history-item-buttons button.delete-btn {
+    background: var(--red-danger);
+}
+.history-item-buttons button.delete-btn:hover {
+    background: #c82333;
+}
+.history-item-buttons button.edit-btn {
+    background: var(--orange-edit);
+}
+.history-item-buttons button.edit-btn:hover {
+    background: var(--dark-orange-edit);
+}
+
+#daftar-hadir-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#daftar-hadir-container > div {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: grab;
+}
+#daftar-hadir-container > div.dragging {
+    opacity: 0.5;
+    cursor: grabbing;
+}
+
+#daftar-hadir-container input.hadir {
+    flex-grow: 1;
+    margin-bottom: 0;
+}
+
+button.delete-participant-btn {
+    margin: 0;
+    padding: 5px 10px;
+    font-size: 0.8em;
+    min-width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    box-shadow: none;
+    background: var(--red-danger);
+    color: white;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background 0.2s ease;
+}
+
+button.delete-participant-btn:hover {
+    background: #c82333;
+    transform: none;
+    box-shadow: none;
+}
+
+button.gemini-btn {
+    background: linear-gradient(135deg, var(--gemini-green) 0%, #5CB85C 100%);
+    box-shadow: 0 4px 10px rgba(52, 168, 83, 0.2);
+}
+button.gemini-btn:hover {
+    background: linear-gradient(135deg, #288F44 0%, var(--gemini-green) 100%);
+    box-shadow: 0 6px 15px rgba(52, 168, 83, 0.3);
+}
+button.gemini-btn:disabled {
+    background: #cccccc;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
+
+hr {
+    border: none;
+    border-top: 1px dashed var(--border-light);
+    margin: 40px auto;
+    width: 80%;
+}
+
+/* Modal Styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.modal-overlay.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-content {
+    background-color: var(--content-bg);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px var(--shadow-medium);
+    max-width: 450px;
+    width: 90%;
+    text-align: center;
+    transform: translateY(-20px);
+    opacity: 0;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.modal-overlay.visible .modal-content {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.modal-content h4 {
+    color: var(--primary-blue);
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.4em;
+    font-weight: 600;
+}
+
+.modal-content p {
+    color: var(--text-medium);
+    margin-bottom: 25px;
+    line-height: 1.5;
+}
+
+.modal-content .modal-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.modal-content .modal-buttons button {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 0.95em;
+    font-weight: 500;
+    box-shadow: none;
+    margin: 0;
+}
+
+.modal-content .modal-buttons button.confirm-btn {
+    background: linear-gradient(135deg, var(--primary-blue) 0%, #6A9EEB 100%);
+    color: white;
+}
+.modal-content .modal-buttons button.confirm-btn:hover {
+    background: linear-gradient(135deg, var(--dark-blue) 0%, var(--primary-blue) 100%);
+}
+
+.modal-content .modal-buttons button.cancel-btn {
+    background: #f0f0f0;
+    color: var(--text-dark);
+    border: 1px solid var(--border-light);
+}
+.modal-content .modal-buttons button.cancel-btn:hover {
+    background: #e0e0e0;
+}
+
+/* Filter section styling */
+.filter-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 20px;
+    align-items: flex-end;
+}
+
+.filter-section .filter-group {
+    flex: 1;
+    min-width: 180px;
+}
+
+.filter-section label {
+    margin-top: 0;
+    margin-bottom: 5px;
+    font-size: 0.9em;
+}
+
+.filter-section input,
+.filter-section select {
+    margin-bottom: 0;
+}
+
+.filter-section button {
+    margin: 0;
+    padding: 10px 20px;
+    font-size: 0.9em;
+    align-self: flex-end;
+}
+
+/* Watermark style for PDF */
+.pdf-watermark {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-size: 12px;
+    color: rgba(0, 0, 0, 0.3);
+    font-weight: bold;
+    transform: rotate(-15deg);
+    transform-origin: 100% 100%;
+    z-index: 9999;
+}
+
+/* Watermark style for Web Display */
+.web-watermark {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-25deg);
+    font-size: 3em;
+    color: rgba(0, 0, 0, 0.08);
+    font-weight: bold;
+    pointer-events: none;
+    white-space: nowrap;
+    z-index: 1;
+}
+
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    body {
+        padding: 15px;
+    }
+    form, #output, #history-section, #user-info {
+        padding: 20px;
+        margin: 15px auto;
+    }
+    h2, h3 {
+        font-size: 1.5em;
+        margin-bottom: 20px;
+    }
+    button {
+        width: calc(50% - 10px);
+        margin: 5px;
+    }
+    .button-group {
+        gap: 5px;
+    }
+    .history-item-buttons button {
+        width: calc(50% - 4px);
+    }
+    .filter-section {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .filter-section .filter-group {
+        min-width: unset;
+        width: 100%;
+    }
+    .filter-section button {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 0;
+    }
+    form, #output, #history-section, #user-info {
+        padding: 20px 15px;
+        margin: 0 auto;
+        width: 100%;
+        border-radius: 0;
+        box-shadow: none;
+    }
+    h2, h3 {
+        font-size: 1.6em;
+        margin-bottom: 15px;
+        padding: 0 10px;
+    }
+    label {
+        font-size: 1em;
+    }
+    input, select, textarea {
+        padding: 15px;
+        font-size: 1.1em;
+    }
+    button {
+        width: 100%;
+        margin: 5px 0;
+        padding: 15px 25px;
+        font-size: 1.05em;
+    }
+    .button-group {
+        gap: 8px;
+    }
+    .history-item-buttons button {
+        width: 100%;
+        padding: 12px;
+        font-size: 0.95em;
+    }
+    .web-watermark {
+        font-size: 2em;
+    }
+}

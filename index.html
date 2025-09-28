@@ -5,13 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>e-Laporan Kegiatan SDM Polda Banten</title>
 
-    <!-- Google Fonts - Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- html2pdf.js CDN for PDF generation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-    <!-- PWA: Link to manifest.json -->
     <link rel="manifest" href="./manifest.json">
 
     <style>
@@ -213,11 +210,16 @@
             flex-direction: column; /* Stack participants vertically */
             gap: 10px; /* Space between each participant row */
         }
-
+        
         #daftar-hadir-container > div {
             display: flex;
             align-items: center;
             gap: 5px; /* Space between input and remove button */
+            cursor: grab; /* Set drag cursor */
+        }
+        #daftar-hadir-container > div.dragging {
+            opacity: 0.5;
+            cursor: grabbing;
         }
 
         #daftar-hadir-container input.hadir {
@@ -502,9 +504,7 @@
     <h2>e-Laporan Kegiatan SDM Polda Banten</h2>
 
     <form id="reportForm">
-        <input type="hidden" id="editingReportId" value=""> <!-- Hidden field to store the ID of the report being edited -->
-
-        <label for="jenis">Jenis Kegiatan:</label>
+        <input type="hidden" id="editingReportId" value=""> <label for="jenis">Jenis Kegiatan:</label>
         <input type="text" id="jenis" placeholder="Contoh: Rapat, Supervisi, Kunjungan" required />
 
         <label for="kepada">Kepada Yth:</label>
@@ -524,11 +524,9 @@
         </select>
 
         <label for="tanggal">Hari, Tanggal:</label>
-        <!-- Changed input type to 'date' for better validation and date picker UI -->
         <input type="date" id="tanggal" required />
 
         <label for="waktu">Waktu:</label>
-        <!-- Changed input type to 'time' for better validation and time picker UI -->
         <input type="time" id="waktu" required />
 
         <label for="tempat">Tempat:</label>
@@ -545,8 +543,7 @@
 
         <label>Dihadiri oleh:</label>
         <div id="daftar-hadir-container">
-            <!-- Default participant input will be added by JavaScript on load/reset -->
-        </div>
+            </div>
         <datalist id="daftar-hadir">
             <option value="Kasubbagmutjab Bag Binkar Ro SDM Polda Banten"></option>
             <option value="Staff Bagbinkar Ro SDM Polda Banten"></option>
@@ -1877,10 +1874,8 @@
 
     <h3>Hasil Laporan:</h3>
     <div id="output">
-        <!-- Generated report content will be displayed here -->
         <div id="reportDisplayArea"></div>
-        <!-- Web watermark will be added dynamically here -->
-    </div>
+        </div>
 
     <hr>
 
@@ -1895,27 +1890,23 @@
                 <label for="filterJenis">Jenis Kegiatan:</label>
                 <select id="filterJenis" onchange="renderHistory()">
                     <option value="">Semua</option>
-                    <!-- Options will be dynamically populated -->
-                </select>
+                    </select>
             </div>
             <div class="filter-group">
                 <label for="filterKepada">Kepada Yth:</label>
                 <select id="filterKepada" onchange="renderHistory()">
                     <option value="">Semua</option>
-                    <!-- Options will be dynamically populated -->
-                </select>
+                    </select>
             </div>
             <button onclick="renderHistory()">Terapkan Filter</button>
         </div>
         <div id="history">
-            <!-- Report history will be displayed here -->
-        </div>
+            </div>
         <div class="button-group">
             <button type="button" onclick="clearAllHistory()" class="delete-btn">Bersihkan Semua Riwayat</button>
         </div>
     </div>
 
-    <!-- Custom Modal Structure -->
     <div id="customModal" class="modal-overlay">
         <div class="modal-content">
             <h4 id="modalTitle"></h4>
@@ -1979,19 +1970,60 @@
             confirmCallback = null; // Clear the callback
         }
 
-        // Function to add more participant input fields
+        // --- Drag and Drop Functions ---
+        let draggedItem = null;
+
+        function handleDragStart(e) {
+            draggedItem = this;
+            setTimeout(() => {
+                this.classList.add('dragging');
+            }, 0);
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/html', this.innerHTML);
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault(); // This is crucial for drop to work
+            e.dataTransfer.dropEffect = 'move';
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            if (e.target.closest('.hadir-item') && e.target.closest('.hadir-item') !== draggedItem) {
+                const dropTarget = e.target.closest('.hadir-item');
+                const container = document.getElementById("daftar-hadir-container");
+                const dropTargetIndex = Array.from(container.children).indexOf(dropTarget);
+                const draggedIndex = Array.from(container.children).indexOf(draggedItem);
+
+                if (draggedIndex > dropTargetIndex) {
+                    container.insertBefore(draggedItem, dropTarget);
+                } else {
+                    container.insertBefore(draggedItem, dropTarget.nextSibling);
+                }
+            }
+        }
+
+        function handleDragEnd(e) {
+            this.classList.remove('dragging');
+            draggedItem = null;
+        }
+
+        // Function to add a participant input field with drag-and-drop
         function tambahPeserta() {
             const container = document.getElementById("daftar-hadir-container");
-            const newParticipantDiv = document.createElement("div"); // Create a div to hold input and button
-            newParticipantDiv.style.display = "flex";
-            newParticipantDiv.style.alignItems = "center";
-            newParticipantDiv.style.gap = "5px";
+            const newParticipantDiv = document.createElement("div");
+            newParticipantDiv.className = "hadir-item"; // Add a class for drag and drop
+            newParticipantDiv.draggable = true;
+            newParticipantDiv.addEventListener('dragstart', handleDragStart);
+            newParticipantDiv.addEventListener('dragover', handleDragOver);
+            newParticipantDiv.addEventListener('drop', handleDrop);
+            newParticipantDiv.addEventListener('dragend', handleDragEnd);
 
             const input = document.createElement("input");
             input.setAttribute("list", "daftar-hadir");
             input.className = "hadir";
             input.placeholder = "Ketik atau pilih peserta";
-            input.style.marginBottom = "0"; // Override default margin for stacked inputs
+            input.style.marginBottom = "0";
 
             const removeBtn = document.createElement("button");
             removeBtn.textContent = "X";
@@ -2182,9 +2214,12 @@ Wassalamu'alaikum Wr. Wb.
         function addDefaultParticipantInput() {
             const container = document.getElementById("daftar-hadir-container");
             const defaultParticipantDiv = document.createElement("div");
-            defaultParticipantDiv.style.display = "flex";
-            defaultParticipantDiv.style.alignItems = "center";
-            defaultParticipantDiv.style.gap = "5px";
+            defaultParticipantDiv.className = "hadir-item"; // Add a class for drag and drop
+            defaultParticipantDiv.draggable = true;
+            defaultParticipantDiv.addEventListener('dragstart', handleDragStart);
+            defaultParticipantDiv.addEventListener('dragover', handleDragOver);
+            defaultParticipantDiv.addEventListener('drop', handleDrop);
+            defaultParticipantDiv.addEventListener('dragend', handleDragEnd);
 
             const defaultInput = document.createElement("input");
             defaultInput.setAttribute("list", "daftar-hadir");
@@ -2412,9 +2447,12 @@ Wassalamu'alaikum Wr. Wb.
             if (item.data.peserta && item.data.peserta.length > 0) {
                 item.data.peserta.forEach(peserta => {
                     const newParticipantDiv = document.createElement("div");
-                    newParticipantDiv.style.display = "flex";
-                    newParticipantDiv.style.alignItems = "center";
-                    newParticipantDiv.style.gap = "5px";
+                    newParticipantDiv.className = "hadir-item"; // Add a class for drag and drop
+                    newParticipantDiv.draggable = true;
+                    newParticipantDiv.addEventListener('dragstart', handleDragStart);
+                    newParticipantDiv.addEventListener('dragover', handleDragOver);
+                    newParticipantDiv.addEventListener('drop', handleDrop);
+                    newParticipantDiv.addEventListener('dragend', handleDragEnd);
 
                     const input = document.createElement("input");
                     input.setAttribute("list", "daftar-hadir");
@@ -2646,4 +2684,4 @@ Perluasan:`;
 
 </body>
 </html>
-
+```

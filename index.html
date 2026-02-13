@@ -2250,13 +2250,51 @@
         // APP 1: KETAHANAN PANGAN LOGIC
         // ==========================================
         const dataPolsek = {
-            "Polresta Tangerang": ["Polsek Tigaraksa", "Polsek Balaraja", "Polsek Cikupa", "Polsek Panongan", "Polsek Pasar Kemis", "Polsek Rajeg", "Polsek Mauk", "Polsek Kronjo", "Polsek Kresek"],
-            "Polres Cilegon": ["Polsek Cilegon", "Polsek Pulomerak", "Polsek Anyar", "Polsek Mancak", "Polsek Bojonegara", "Polsek Cinangka", "Polsek Ciwandan", "Polsek Purwakarta"],
-            "Polres Serang Kota": ["Polsek Serang", "Polsek Cipocok Jaya", "Polsek Curug", "Polsek Walantaka", "Polsek Kasemen", "Polsek Taktakan", "Polsek Kramatwatu"],
-            "Polres Serang": ["Polsek Ciruas", "Polsek Kragilan", "Polsek Pontang", "Polsek Tirtayasa", "Polsek Cikande", "Polsek Petir", "Polsek Tanara", "Polsek Padarincang"],
-            "Polres Pandeglang": ["Polsek Pandeglang", "Polsek Cadasari", "Polsek Labuan", "Polsek Pagelaran", "Polsek Panimbang", "Polsek Menes", "Polsek Jiput", "Polsek Cibaliung"],
-            "Polres Lebak": ["Polsek Rangkasbitung", "Polsek Maja", "Polsek Cipanas", "Polsek Malingping", "Polsek Bayah", "Polsek Sajira", "Polsek Bojongmanik", "Polsek Warunggunung"]
-        };
+            "Polresta Tangerang": [
+                "Polsek Tigaraksa", "Polsek Balaraja", "Polsek Cikupa",
+                "Polsek Panongan", "Polsek Pasar Kemis", "Polsek Rajeg",
+                "Polsek Mauk", "Polsek Kronjo", "Polsek Kresek", "Polsek Cisoka"
+            ],
+            "Polres Cilegon": [
+                "Polsek Cilegon", "Polsek Pulomerak", "Polsek Anyar",
+                "Polsek Mancak", "Polsek Bojonegara", "Polsek Cinangka",
+                "Polsek Ciwandan", "Polsek Purwakarta", "Polsek Cibeber",
+                "Polsek Puloampel", "Polsek Kp. Merak & Kp. Banten"
+            ],
+            "Polres Serang Kota": [
+                "Polsek Serang", "Polsek Cipocok Jaya", "Polsek Curug",
+                "Polsek Baros", "Polsek Walantaka", "Polsek Kasemen",
+                "Polsek Pabuaran", "Polsek Ciomas", "Polsek Padarincang",
+                "Polsek Waringinkurung", "Polsek Taktakan", "Polsek Kramatwatu"
+            ],
+            "Polres Serang": [
+                "Polsek Ciruas", "Polsek Kragilan", "Polsek Cikande",
+                "Polsek Petir", "Polsek Jawilan", "Polsek Tirtayasa",
+                "Polsek Tanara", "Polsek Carenang", "Polsek Pamarayan",
+                "Polsek Kopo", "Polsek Pontang", "Polsek Cikeusal"
+            ],
+            "Polres Pandeglang": [
+                "Polsek Pandeglang", "Polsek Cadasari", "Polsek Banjar",
+                "Polsek Mandalawangi", "Polsek Labuan", "Polsek Jiput",
+                "Polsek Cimanggu", "Polsek Picung", "Polsek Cigeulis",
+                "Polsek Carita", "Polsek Pagelaran", "Polsek Sumur",
+                "Polsek Panimbang", "Polsek Bojong", "Polsek Cibaliung",
+                "Polsek Munjul", "Polsek Patia", "Polsek Angsana",
+                "Polsek Saketi", "Polsek Cikedal", "Polsek Pulosari",
+                "Polsek Menes", "Polsek Cikeusik", "Polsek Cimanuk"
+            ],
+            "Polres Lebak": [
+                "Polsek Rangkasbitung", "Polsek Kalanganyar", "Polsek Malingping",
+                "Polsek Cibeber", "Polsek Cileles", "Polsek Warunggunung",
+                "Polsek Maja", "Polsek Cibadak", "Polsek Cimarga",
+                "Polsek Cilograng", "Polsek Cijaku", "Polsek Cigemblong",
+                "Polsek Muncang", "Polsek Cipanas", "Polsek Sajira",
+                "Polsek Panggarangan", "Polsek Cihara", "Polsek Bayah",
+                "Polsek Lebakgedong", "Polsek Cikulur", "Polsek Curugbitung",
+                "Polsek Leuwidamar", "Polsek Cirinten", "Polsek Gunung Kencana",
+                "Polsek Sobang", "Polsek Bojongmanik", "Polsek Wanasalam",
+                "Polsek Banjarsari"
+            ]
 
         function pangan_addEntry(containerId, placeholder = "Detail data...") {
             const container = document.getElementById(containerId);
@@ -2308,7 +2346,7 @@
             const months = ["JANUARI", "FEBRUARI", "MARET", "APRIL", "MEI", "JUNI", "JULI", "AGUSTUS", "SEPTEMBER", "OKTOBER", "NOVEMBER", "DESEMBER"];
             const tglFmt = isNaN(d.getTime()) ? "-" : `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
 
-            const getVal = id => document.getElementById(id).value || "-";
+            const getVal = id => document.getElementById(id).value || "NIHIL";
 
             let text = `_*LAPORAN HARIAN PROGRAM POLRI DI BIDANG KETAHANAN PANGAN POLDA JAJARAN ${kluster.toUpperCase()} (${tglFmt})*_\n\n` +
                 `*POLDA BANTEN*\n` +
@@ -2677,3 +2715,4 @@
 </body>
 
 </html>
+

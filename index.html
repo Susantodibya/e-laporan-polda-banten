@@ -424,7 +424,7 @@
                 <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
                 System Online
             </div>
-            <p class="text-slate-600 text-[10px] mt-2">© 2024 Polda Banten</p>
+            <p class="text-slate-600 text-[10px] mt-2">© Mas Meep Project</p>
         </div>
     </aside>
 
@@ -595,10 +595,18 @@
                             <label class="text-xs font-bold text-yellow-500 uppercase tracking-widest mb-4 block">3.
                                 Harga Jagung Pipilan 14% (Isi Manual)</label>
                             <div class="space-y-4">
-                                <div><textarea id="kp-bulog_manual" placeholder="- Rp. 6.400 (Pipil Kering)..."
-                                        class="w-full kp-neo-input rounded-xl px-4 py-3 h-24"></textarea></div>
-                                <div><input type="text" id="kp-nonbulog" placeholder="Contoh: Rp. 6.000 s.d. Rp. 7.000"
-                                        class="w-full kp-neo-input rounded-xl px-4 py-3"></div>
+                                <div>
+                                    <span class="text-[10px] font-bold text-slate-400 uppercase mb-1 block">A. BULOG
+                                        (KETIK MANUAL PER BARIS)</span>
+                                    <textarea id="kp-bulog_manual" placeholder="- Rp. 6.400 (Pipil Kering)..."
+                                        class="w-full kp-neo-input rounded-xl px-4 py-3 h-24"></textarea>
+                                </div>
+                                <div>
+                                    <span class="text-[10px] font-bold text-slate-400 uppercase mb-1 block">B. DILUAR
+                                        BULOG</span>
+                                    <textarea id="kp-nonbulog" placeholder="- Rp. 6.000..."
+                                        class="w-full kp-neo-input rounded-xl px-4 py-3 h-24"></textarea>
+                                </div>
                             </div>
                         </div>
 
@@ -619,23 +627,43 @@
                             <div class="space-y-4">
                                 <div>
                                     <div class="flex justify-between mb-2"><span
-                                            class="text-[10px] font-bold text-slate-400 uppercase">a.
-                                            Tanam</span><button onclick="pangan_addEntry('kp-giat-tanam-list')"
+                                            class="text-[10px] font-bold text-slate-400 uppercase">A.
+                                            TANAM</span><button onclick="pangan_addEntry('kp-giat-tanam-list')"
                                             class="text-[9px] border border-slate-600 px-2 py-1 rounded">+ UNIT</button>
                                     </div>
                                     <div id="kp-giat-tanam-list" class="space-y-2"></div>
                                 </div>
                                 <div>
                                     <div class="flex justify-between mb-2"><span
-                                            class="text-[10px] font-bold text-slate-400 uppercase">b.
-                                            Panen</span><button onclick="pangan_addEntry('kp-giat-panen-list')"
+                                            class="text-[10px] font-bold text-slate-400 uppercase">B.
+                                            PANEN</span><button onclick="pangan_addEntry('kp-giat-panen-list')"
                                             class="text-[9px] border border-slate-600 px-2 py-1 rounded">+ UNIT</button>
                                     </div>
                                     <div id="kp-giat-panen-list" class="space-y-2"></div>
                                 </div>
-                                <div><textarea id="kp-giat-lain" placeholder="Kegiatan lainnya..."
-                                        class="w-full kp-neo-input rounded-xl px-4 py-3 h-20"></textarea></div>
+                                <div>
+                                    <div class="flex justify-between mb-2"><span
+                                            class="text-[10px] font-bold text-slate-400 uppercase">C.
+                                            PENGECEKAN TANAMAN</span><button
+                                            onclick="pangan_addEntry('kp-giat-cek-list')"
+                                            class="text-[9px] border border-slate-600 px-2 py-1 rounded">+ UNIT</button>
+                                    </div>
+                                    <div id="kp-giat-cek-list" class="space-y-2"></div>
+                                </div>
+                                <div>
+                                    <span class="text-[10px] font-bold text-slate-400 uppercase mb-1 block">D. KEGIATAN
+                                        LAINNYA</span>
+                                    <textarea id="kp-giat-lain" placeholder="Kegiatan lainnya..."
+                                        class="w-full kp-neo-input rounded-xl px-4 py-3 h-20"></textarea>
+                                </div>
                             </div>
+                        </div>
+
+                        <div class="kp-section-card">
+                            <label class="text-xs font-bold text-yellow-500 uppercase tracking-widest mb-4 block">6.
+                                KENDALA</label>
+                            <textarea id="kp-kendala" placeholder="Tulis kendala jika ada..."
+                                class="w-full kp-neo-input rounded-xl px-4 py-3 h-24"></textarea>
                         </div>
                     </div>
 
@@ -2347,18 +2375,41 @@
             const months = ["JANUARI", "FEBRUARI", "MARET", "APRIL", "MEI", "JUNI", "JULI", "AGUSTUS", "SEPTEMBER", "OKTOBER", "NOVEMBER", "DESEMBER"];
             const tglFmt = isNaN(d.getTime()) ? "-" : `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
 
-            const getVal = id => document.getElementById(id).value || "NIHIL";
+            const getVal = (id) => document.getElementById(id).value || "NIHIL";
+            const getListText = (id) => {
+                const list = pangan_getEntriesText(id);
+                return list.length ? list.map(t => `- ${t}`).join('\n') : "NIHIL";
+            };
+
+            // Section 5 Formatting Logic
+            const listTanam = getListText('kp-giat-tanam-list');
+            const listPanen = getListText('kp-giat-panen-list');
+            const listCek = getListText('kp-giat-cek-list');
+            const giatLain = getVal('kp-giat-lain');
+
+            let sec5Formatted = "";
+            if (listTanam === "NIHIL" && listPanen === "NIHIL" && listCek === "NIHIL" && giatLain === "NIHIL") {
+                sec5Formatted = "NIHIL";
+            } else {
+                const formatSubItem = (val) => val === "NIHIL" ? "NIHIL" : ("\n" + val.split('\n').map(line => "      " + line).join('\n'));
+                sec5Formatted = `\n   a. Tanam: ${formatSubItem(listTanam)}\n` +
+                    `   b. Panen: ${formatSubItem(listPanen)}\n` +
+                    `   c. Pengecekan Tanaman: ${formatSubItem(listCek)}\n` +
+                    `   d. Kegiatan Lainnya: ${giatLain}`;
+            }
 
             let text = `_*LAPORAN HARIAN PROGRAM POLRI DI BIDANG KETAHANAN PANGAN POLDA JAJARAN ${kluster.toUpperCase()} (${tglFmt})*_\n\n` +
                 `*POLDA BANTEN*\n` +
-                `1. Penambahan Lahan:\n${pangan_getEntriesText('kp-lahan-list').map(t => `- ${t}`).join('\n') || "NIHIL"}\n\n` +
-                `2. Produksi Harian:\n${pangan_getEntriesText('kp-panen-list').map(t => `- ${t}`).join('\n') || "NIHIL"}\n\n` +
-                `3. Harga Jagung:\n   a. Bulog: ${getVal('kp-bulog_manual')}\n   b. Diluar Bulog: ${getVal('kp-nonbulog')}\n\n` +
-                `4. Serapan:\n   a. Bulog: ${getVal('kp-serap_bulog')}\n   b. Pabrik: ${getVal('kp-serap_pabrik')}\n\n` +
-                `5. Kegiatan Harian:\n` +
-                `   a. Tanam:\n${pangan_getEntriesText('kp-giat-tanam-list').map(t => `      - ${t}`).join('\n') || "      NIHIL"}\n` +
-                `   b. Panen:\n${pangan_getEntriesText('kp-giat-panen-list').map(t => `      - ${t}`).join('\n') || "      NIHIL"}\n` +
-                `   c. Lainnya: ${getVal('kp-giat-lain')}`;
+                `1. Penambahan Luas Lahan harian / Giat Tanam Harian :\n${getListText('kp-lahan-list')}\n\n` +
+                `2. Produksi Harian / Panen :\n${getListText('kp-panen-list')}\n\n` +
+                `3. Harga Harian Jagung Pipilan 14%:\n` +
+                `   a. Bulog: ${getVal('kp-bulog_manual')}\n` +
+                `   b. Diluar Bulog: ${getVal('kp-nonbulog')}\n\n` +
+                `4. Serapan Jagung:\n` +
+                `   a. Bulog : ${getVal('kp-serap_bulog')}\n` +
+                `   b. Serapan Jagung Pabrik Pakan : ${getVal('kp-serap_pabrik')}\n\n` +
+                `5. Kegiatan Harian Polda/Polres : ${sec5Formatted}\n\n` +
+                `6. Kendala : ${getVal('kp-kendala')}`;
 
             document.getElementById('kp-hasil').innerText = text;
             document.getElementById('kp-outputContainer').classList.remove('hidden');
